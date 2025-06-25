@@ -363,19 +363,21 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 	ddP *= 1.0f / SquareRoot(ddPLength);
     }
 
-    r32 playerSpeed = 300.0f;
+    r32 playerSpeed = 90.0f;
     ddP *= playerSpeed;
     
-    ddP += IsEntityInAir(entity) ? -2.0f * entity->dP : -35.0f*entity->dP;
+    ddP += -7.0*entity->dP;
     //ddP += -35.0f*entity->dP;
 
     tile_map_position oldPlayerP = entity->p;
 
     v2 playerDelta = (0.5f * ddP * Square(dt) + entity->dP*dt);
-    r32 gravity = IsEntityInAir(entity) ? -10.0f : -9.81f;
-    
-    entity->dP.y += dt * (gravity * tileMap->metersToPixels);
 
+#if 0
+    r32 gravity = IsEntityInAir(entity) ? -10.0f : -9.81f;
+#else
+    r32 gravity = 0.0f;
+#endif    
     entity->dP = ddP * dt + entity->dP;
 
     tile_map_position newPlayerP = Offset(tileMap, oldPlayerP, playerDelta);
@@ -449,8 +451,7 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 	    }
 	}
 	entity->p = Offset(tileMap, entity->p, tMin*playerDelta);
-	i32 bounceValue = (isFloor || (!IsEntityInAir(entity))) ? 1 : 2;
-	entity->dP = entity->dP - bounceValue*Inner(entity->dP, wallNormal)*wallNormal;
+	entity->dP = entity->dP - 1*Inner(entity->dP, wallNormal)*wallNormal;
 	playerDelta = playerDelta - 1 * Inner(playerDelta, wallNormal)*wallNormal;
 	tRemaining -= tMin;
     }
@@ -796,85 +797,30 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		}
 		bool32 movementDetected = false;
 		bool32 jumpInputDetected = false;
-		if (!IsEntityInAir(controllingEntity))
+		if (controller->moveLeft.endedDown)
 		{
-		    if (controller->moveLeft.endedDown)
-		    {
-			ddP.x = -1.0f;
-			movementDetected = true;
-			moveAnimDetected = true;
-			gameState->cameraFollowingEntity = true;
-		    }
-		    if (controller->moveRight.endedDown)
-		    {
-			ddP.x = 1.0f;
-			movementDetected = true;
-			moveAnimDetected = true;			
-			gameState->cameraFollowingEntity = true;			
-		    }
+		    ddP.x = -1.0f;
+		    movementDetected = true;
+		    moveAnimDetected = true;
+		    gameState->cameraFollowingEntity = true;
+		}
+		if (controller->moveRight.endedDown)
+		{
+		    ddP.x = 1.0f;
+		    movementDetected = true;
+		    moveAnimDetected = true;			
+		    gameState->cameraFollowingEntity = true;			
+		}
+		if (controller->moveUp.endedDown)
+		{
+		    ddP.y = 1.0f;
+		}
+		if (controller->moveDown.endedDown)
+		{
+		    ddP.y = -1.0f;
 		}
 
 		bool32 jumpButtonDetected = false;
-		if (controller->moveDown.endedDown)
-		{
-		    //Where we implement the ability to jump
-		    if (controller->actionDown.endedDown)
-		    {
-			if (controllingEntity->dP.y == 0.0f)
-			{
-			    if (controllingEntity->canJump)
-			    {
-				r32 dtMult = input->dTime * 40.0f;
-				if (ddP.x != 0)
-				{
-				    r32 xVel = 10.0f;
-				    if (ddP.x > 0.0f)
-				    {
-					controllingEntity->dP.x +=
-					    ((r32)controllingEntity->framesHeld * dtMult);
-				    }
-				    else
-				    {
-					controllingEntity->dP.x -=
-					    ((r32)controllingEntity->framesHeld * dtMult);
-				    }
-				}
-
-				controllingEntity->dP.y += ((r32)controllingEntity->framesHeld * dtMult + 30.0f);
-				controllingEntity->canJump = false;
-
-			    }
-			}
-			jumpAnimDetected = false;
-			moveAnimDetected = true;
-		    }
-		    else
-		    {
-			controllingEntity->canJump = true;
-			jumpAnimDetected = true;			
-			ddP.x = 0.0f;			
-		    }
-		    if (controllingEntity->framesHeld == 100)
-		    {
-			//we can jump now
-			controllingEntity->framesHeld = 0;
-			
-		    }
-		    else if (controllingEntity->framesHeld == 5)
-		    {
-			gameState->currentPlayerBitmap = &gameState->playerAnimations[2];
-		    }
-		    else if (controllingEntity->framesHeld == 60)
-		    {
-			gameState->currentPlayerBitmap = &gameState->playerAnimations[3];
-		    }
-		    controllingEntity->framesHeld++;
-
-		}
-		else
-		{
-		    controllingEntity->framesHeld = 0;
-		}
 
 		MovePlayer(gameState, controllingEntity, input->dTime, ddP);
 	    }
