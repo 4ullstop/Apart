@@ -1,6 +1,8 @@
 #include "apart.h"
 #include "apart_tile.cpp"
 
+
+
 #pragma pack(push, 1)
 struct bitmap_header
 {
@@ -536,8 +538,9 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	
 	AddEntity(gameState);
 	
-	gameState->cameraP.absTileX = 33/2;
+	gameState->cameraP.absTileX = 34/2;
 	gameState->cameraP.absTileY = 9;
+
 	
 	InitializeArena(&gameState->worldArena, memory->permanentStorageSize - sizeof(game_state),
 			(u8*)memory->permanentStorage + sizeof(game_state));
@@ -595,13 +598,11 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	u32 screenY = 0;
 	u32 absTileZ = 0;
 
-//initializing our tilemap
-	//TODO: Make this all read from a map file you create
-
-	//Open the file
-	//Write tile info
-	//Read from the file
-#if 0
+#define WRITE_NEW_MAP 1
+#define WRITE_BLANK_MAP 1
+#define WRITE_STRUCTURED_MAP 0
+	
+#if WRITE_NEW_MAP
 
 	//100 chunks of 9x33 tiles
 
@@ -617,10 +618,10 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    tile_value tileValue = {};
 		    tileValue.collisionEnabled = false;
 		    tileValue.tileTexture = e_tile_texture::blueBackground;
-		    u32 absTileX = screenX * tilesPerWidth + tileX;
+	    u32 absTileX = screenX * tilesPerWidth + tileX;
 		    u32 absTileY = screenY * tilesPerHeight + tileY;
 
-
+#if !WRITE_BLANK_MAP 
 		    if (screenIndex == 0)
 		    {
 			if (tileY <= 1)
@@ -628,13 +629,29 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			    tileValue.tileTexture = e_tile_texture::blueBrick;
 			    tileValue.collisionEnabled = true;
 			}
+			if (tileY == (tilesPerHeight * 1))
+			{
+			    tileValue.tileTexture = e_tile_texture::blueBrick;
+			    tileValue.collisionEnabled = true;			    
+			}
 		    }
-		    if ((tileX <= 1) || (tileX == tilesPerWidth - 1) || tileX == tilesPerWidth -2)
+#if 1		    
+		    if ((tileX <= 1))
+		    {
+			tileValue.tileTexture = e_tile_texture::blueBrick;
+			tileValue.collisionEnabled = true;
+		    }
+#else
+		    if ((tileX <= 1) || (tileX > tilesPerWidth - 1))
 		    {
 			tileValue.tileTexture = e_tile_texture::blueBrick;
 			tileValue.collisionEnabled = true;
 		    }
 
+#endif
+#else
+		    //writing the blank map 
+#endif		    
 		    SetTileValue(&gameState->worldArena, world->tileMap, absTileX, absTileY, absTileZ, tileValue);
  
 		    if (openedFile.fileOpened)
@@ -645,7 +662,15 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		}
 	    }
 	    //set it so we only have chunks going up atm, just to test things out
-	    screenY++;
+	    if (isA)
+	    {
+		screenY = !screenY;
+	    }
+	    else
+	    {
+		screenX++;
+	    }
+	    isA = !isA;
 	}
 
 	if (openedFile.fileOpened)
@@ -657,6 +682,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 #if 1 	
 
 	debug_read_file_result result = memory->DEBUGPlatformReadEntireFile(thread, "tilemap_test.map");
+	screenX = 0;
+	screenY = 0;
 	tile_value* tileValue = (tile_value*)result.contents;
 	for (u32 screenIndex = 0; screenIndex < 100; ++screenIndex)
 	{
@@ -673,7 +700,15 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 		}
 	    }
-	    screenY++;
+	    if (isA)
+	    {
+		screenY = !screenY;
+	    }
+	    else
+	    {
+		screenX++;
+	    }
+	    isA = !isA;	    
 	}
 #endif
 	gameState->cameraChunkY = 18;
@@ -687,6 +722,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     tile_map* tileMap = world->tileMap;
     
 
+    //this was 30
     i32 tileSideInPixels = 30;
     r32 metersToPixels = tileSideInPixels / tileMap->tileSideInMeters;
     tileMap->metersToPixels = metersToPixels;
@@ -850,8 +886,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     r32 tileHeight = 60;
 
 
-
     entity* cameraFollowingEntity = GetEntity(gameState, gameState->cameraFollowingEntityIndex);
+#if 0    
     if (cameraFollowingEntity && gameState->cameraFollowingEntity)
     {
 	if ((cameraFollowingEntity->p.absTileY > gameState->cameraChunkY))
@@ -867,7 +903,28 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    gameState->cameraChunkY -= 18;
 	}
     }
-    
+#else
+    if (cameraFollowingEntity)
+    {
+	tile_map_difference diff = Subtract(tileMap, &cameraFollowingEntity->p, &gameState->cameraP);
+	if (diff.dXY.x > (18.0f*tileMap->tileSideInMeters))
+	{
+	    gameState->cameraP.absTileX += 33;
+	}
+	else if (diff.dXY.x < -(18.0f*tileMap->tileSideInMeters))
+	{
+	    gameState->cameraP.absTileX -= 33;
+	}
+	if (diff.dXY.y > (9.0f*tileMap->tileSideInMeters))
+	{
+	    gameState->cameraP.absTileY += 17;
+	}
+	else if (diff.dXY.y < -(9.0f*tileMap->tileSideInMeters))
+	{
+	    gameState->cameraP.absTileY -= 17;
+	}	
+    }
+#endif    
     r32 screenCenterX = 0.5f *(r32)buffer->width;
     r32 screenCenterY = 0.5f * (r32)buffer->height;
     for (i32 relRow =  -10; relRow < 10; ++relRow)
