@@ -1,6 +1,6 @@
  apart
 
- Timestamp is 685d8806 (Thu Jun 26 13:48:54 2025)
+ Timestamp is 685ed1db (Fri Jun 27 13:16:11 2025)
 
  Preferred load address is 0000000180000000
 
@@ -82,8 +82,8 @@
  0000:00000000       __ImageBase                0000000180000000     <linker-defined>
  0001:00006350       ?PushSize_@@YAPEAXPEAUmemory_arena@@_K@Z 0000000180007350 f   apart.obj
  0001:00006830       ?Subtract@@YA?AUtile_map_difference@@PEAUtile_map@@PEAUtile_map_position@@1@Z 0000000180007830 f   apart.obj
- 0001:00008570       GameGetSoundData           0000000180009570 f   apart.obj
- 0001:00008580       GameUpdateAndRender        0000000180009580 f   apart.obj
+ 0001:000085f0       GameGetSoundData           00000001800095f0 f   apart.obj
+ 0001:00008600       GameUpdateAndRender        0000000180009600 f   apart.obj
  0001:0000ae60       ??D@YA?AUv2@@MU0@@Z        000000018000be60 f i apart.obj
  0001:0000aeb0       ??D@YA?AUv2@@U0@M@Z        000000018000beb0 f i apart.obj
  0001:0000af00       ??G@YA?AUv2@@U0@0@Z        000000018000bf00 f i apart.obj
@@ -2722,8 +2722,9 @@
  0002:000008b0       __xp_z                     000000018008a8b0     LIBCMT:initializers.obj
  0002:000009c0       __xt_a                     000000018008a9c0     LIBCMT:initializers.obj
  0002:00000ad0       __xt_z                     000000018008aad0     LIBCMT:initializers.obj
- 0002:00000cfc       __real@c0e00000            000000018008acfc     apart.obj
- 0002:00000d00       __real@c1f00000            000000018008ad00     apart.obj
+ 0002:00000c8c       __real@c1f00000            000000018008ac8c     apart.obj
+ 0002:00000cfc       __real@bf800000            000000018008acfc     apart.obj
+ 0002:00000d00       __real@c0e00000            000000018008ad00     apart.obj
  0002:00000d10       __xmm@80000000800000008000000080000000 000000018008ad10     apart.obj
  0002:00000d34       __real@00000000            000000018008ad34     apart.obj
  0002:00000d38       __real@38d1b717            000000018008ad38     apart.obj
@@ -2732,14 +2733,14 @@
  0002:00000d44       __real@3f400000            000000018008ad44     apart.obj
  0002:00000d48       __real@3f800000            000000018008ad48     apart.obj
  0002:00000d4c       __real@3fb33333            000000018008ad4c     apart.obj
- 0002:00000d50       __real@41100000            000000018008ad50     apart.obj
- 0002:00000d54       __real@41900000            000000018008ad54     apart.obj
- 0002:00000d58       __real@42700000            000000018008ad58     apart.obj
- 0002:00000d5c       __real@42b40000            000000018008ad5c     apart.obj
- 0002:00000d60       __real@437f0000            000000018008ad60     apart.obj
- 0002:00000d64       __real@bf000000            000000018008ad64     apart.obj
- 0002:00000d68       __real@bf00068e            000000018008ad68     apart.obj
- 0002:00000d6c       __real@bf800000            000000018008ad6c     apart.obj
+ 0002:00000d50       __real@40a00000            000000018008ad50     apart.obj
+ 0002:00000d54       __real@41100000            000000018008ad54     apart.obj
+ 0002:00000d58       __real@41900000            000000018008ad58     apart.obj
+ 0002:00000d5c       __real@42700000            000000018008ad5c     apart.obj
+ 0002:00000d60       __real@42b40000            000000018008ad60     apart.obj
+ 0002:00000d64       __real@437f0000            000000018008ad64     apart.obj
+ 0002:00000d68       __real@bf000000            000000018008ad68     apart.obj
+ 0002:00000d6c       __real@bf00068e            000000018008ad6c     apart.obj
  0002:00000d70       __xmm@7fffffffffffffff7fffffffffffffff 000000018008ad70     apart.obj
  0002:00000d88       _pDefaultRawDllMain        000000018008ad88     LIBCMT:dll_dllmain.obj
  0002:00000d88       _pRawDllMain               000000018008ad88     LIBCMT:dll_dllmain.obj
@@ -4658,9 +4659,10 @@
  0001:00006ee0       ?DrawBitmap@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@MMHH@Z 0000000180007ee0 f   apart.obj
  0001:00007360       ?DrawBackgroundTile@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@Uv2@@2@Z 0000000180008360 f   apart.obj
  0001:00007770       ?AddEntity@@YAIPEAUgame_state@@@Z 0000000180008770 f   apart.obj
- 0001:000077e0       ?InitializePlayer@@YAXPEAUgame_state@@I@Z 00000001800087e0 f   apart.obj
- 0001:000078a0       ?TestWall@@YAHMMMMMPEAMMM@Z 00000001800088a0 f   apart.obj
- 0001:000079b0       ?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 00000001800089b0 f   apart.obj
+ 0001:000077e0       ?AddEntity@@YAIPEAUgame_state@@PEAUentity@@@Z 00000001800087e0 f   apart.obj
+ 0001:00007860       ?InitializePlayer@@YAXPEAUgame_state@@I@Z 0000000180008860 f   apart.obj
+ 0001:00007920       ?TestWall@@YAHMMMMMPEAMMM@Z 0000000180008920 f   apart.obj
+ 0001:00007a30       ?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 0000000180008a30 f   apart.obj
  0001:0000bad0       $$000000                   000000018000cad0     LIBCMT:chkstk.obj
  0001:0000bb50       $$000000                   000000018000cb50     LIBCMT:amdsecgs.obj
  0001:0000bb8c       ?dllmain_crt_dispatch@@YAHQEAUHINSTANCE__@@KQEAX@Z 000000018000cb8c f   LIBCMT:dll_dllmain.obj
@@ -5785,23 +5787,19 @@
  0001:0008740e       ?fin$0@?0??__acrt_stdio_allocate_stream@@YA?AV__crt_stdio_stream@@XZ@4HA 000000018008840e f   libucrt:stream.obj
  0001:00087430       common_control87$filt$0    0000000180088430 f   libucrt:ieee.obj
  0001:00087470       _IsNonwritableInCurrentImage$filt$0 0000000180088470 f   LIBCMT:pesect.obj
- 0002:00000be0       $SG5283                    000000018008abe0     apart.obj
- 0002:00000bf8       $SG5284                    000000018008abf8     apart.obj
- 0002:00000c10       $SG5285                    000000018008ac10     apart.obj
- 0002:00000c30       $SG5286                    000000018008ac30     apart.obj
- 0002:00000c48       $SG5287                    000000018008ac48     apart.obj
- 0002:00000c60       $SG5288                    000000018008ac60     apart.obj
- 0002:00000c80       $SG5289                    000000018008ac80     apart.obj
- 0002:00000ca0       $SG5290                    000000018008aca0     apart.obj
- 0002:00000cb8       $SG5291                    000000018008acb8     apart.obj
- 0002:00000cd0       $SG5296                    000000018008acd0     apart.obj
- 0002:00000ce8       $SG5307                    000000018008ace8     apart.obj
  0002:00000d98       GS_ExceptionPointers       000000018008ad98     LIBCMT:gs_report.obj
  0002:00000de0       ?tokenTable@@3QBUStringLiteral@@B 000000018008ade0     libvcruntime:undname.obj
  0002:00000ef0       ?nameTable@@3QBUStringLiteral@@B 000000018008aef0     libvcruntime:undname.obj
  0002:00001420       ?rttiTable@@3QBUStringLiteral@@B 000000018008b420     libvcruntime:undname.obj
  0002:00001470       ?IndirectionName@@3QBUStringLiteral@@B 000000018008b470     libvcruntime:undname.obj
  0002:000014d0       ?PrefixName@@3QBUStringLiteral@@B 000000018008b4d0     libvcruntime:undname.obj
+ 0002:000014f0       $SG5289                    000000018008b4f0     apart.obj
+ 0002:00001508       $SG5290                    000000018008b508     apart.obj
+ 0002:00001520       $SG5291                    000000018008b520     apart.obj
+ 0002:00001540       $SG5292                    000000018008b540     apart.obj
+ 0002:00001558       $SG5293                    000000018008b558     apart.obj
+ 0002:00001568       $SG5294                    000000018008b568     apart.obj
+ 0002:00001580       $SG5306                    000000018008b580     apart.obj
  0002:00002460       ?result@?1??IsValidIdentChar@@YA_ND@Z@4U<unnamed-type-result>@?1??InitValidIdentChar@@YA@XZ@B 000000018008c460     libvcruntime:undname.obj
  0002:00002620       ?ExceptionTemplate@?1??UnwindNestedFrames@__FrameHandler4@@SAXPEA_KPEAUEHExceptionRecord@@PEAU_CONTEXT@@0PEAXPEAUFuncInfo4@FH4@@HHPEAUHandlerType4@6@PEAU_xDISPATCHER_CONTEXT@@E@Z@4U_EXCEPTION_RECORD@@B 000000018008c620     libvcruntime:risctrnsctrl.obj
  0002:000026e0       ?ExceptionTemplate@?1??UnwindNestedFrames@__FrameHandler3@@SAXPEA_KPEAUEHExceptionRecord@@PEAU_CONTEXT@@0PEAXPEBU_s_FuncInfo@@HHPEBU_s_HandlerType@@PEAU_xDISPATCHER_CONTEXT@@E@Z@4U_EXCEPTION_RECORD@@B 000000018008c6e0     libvcruntime:risctrnsctrl.obj
@@ -5990,10 +5988,11 @@
  0002:0000f334       $unwind$?DrawBitmap@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@MMHH@Z 0000000180099334     apart.obj
  0002:0000f33c       $unwind$?DrawBackgroundTile@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@Uv2@@2@Z 000000018009933c     apart.obj
  0002:0000f344       $unwind$?AddEntity@@YAIPEAUgame_state@@@Z 0000000180099344     apart.obj
- 0002:0000f34c       $unwind$?InitializePlayer@@YAXPEAUgame_state@@I@Z 000000018009934c     apart.obj
- 0002:0000f354       $unwind$?TestWall@@YAHMMMMMPEAMMM@Z 0000000180099354     apart.obj
- 0002:0000f35c       $unwind$?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 000000018009935c     apart.obj
- 0002:0000f370       $unwind$GameUpdateAndRender 0000000180099370     apart.obj
+ 0002:0000f34c       $unwind$?AddEntity@@YAIPEAUgame_state@@PEAUentity@@@Z 000000018009934c     apart.obj
+ 0002:0000f358       $unwind$?InitializePlayer@@YAXPEAUgame_state@@I@Z 0000000180099358     apart.obj
+ 0002:0000f360       $unwind$?TestWall@@YAHMMMMMPEAMMM@Z 0000000180099360     apart.obj
+ 0002:0000f368       $unwind$?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 0000000180099368     apart.obj
+ 0002:0000f37c       $unwind$GameUpdateAndRender 000000018009937c     apart.obj
  0002:0000f39c       $unwind$?SetTileValueUnchecked@@YAXPEAUtile_map@@PEAUtile_chunk@@IIUtile_value@@@Z 000000018009939c     apart.obj
  0002:0000f3a4       $unwind$?SetTileValue@@YAIPEAUtile_map@@PEAUtile_chunk@@IIUtile_value@@@Z 00000001800993a4     apart.obj
  0002:0000f3b4       $unwind$?GetChunkPositionFor@@YA?AUtile_chunk_position@@PEAUtile_map@@III@Z 00000001800993b4     apart.obj

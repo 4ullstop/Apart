@@ -313,6 +313,15 @@ AddEntity(game_state* gameState)
     return(entityIndex);
 }
 
+internal u32
+AddEntity(game_state* gameState, entity* newEntity)
+{
+    u32 entityIndex = gameState->entityCount++;
+    Assert(gameState->entityCount < ArrayCount(gameState->entities));
+    gameState->entities[entityIndex] = *newEntity;
+    return(entityIndex);
+}
+
 internal void
 InitializePlayer(game_state* gameState, u32 entityIndex)
 {
@@ -458,6 +467,7 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 	tRemaining -= tMin;
     }
 
+    
     if ((entity->dP.x == 0) && (entity->dP.y == 0))
     {
 	
@@ -549,25 +559,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	gameState->playerAnimations[0].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/player_idle.bmp");
 	gameState->playerAnimations[0].alignX = 15;
 	gameState->playerAnimations[0].alignY = 23;
-	
-	gameState->playerAnimations[1].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/player_idle.bmp");
-	gameState->playerAnimations[1].alignX = 15;
-	gameState->playerAnimations[1].alignY = 23;
-	
-	gameState->playerAnimations[2].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/player_launch_01.bmp");
-	gameState->playerAnimations[2].alignX = 15;
-	gameState->playerAnimations[2].alignY = 18;
-	
-	gameState->playerAnimations[3].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/player_launch_02.bmp");
-	gameState->playerAnimations[3].alignX = 15;
-	gameState->playerAnimations[3].alignY = 17;
-	
-	gameState->playerAnimations[4].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/player_in_air.bmp");
-	gameState->playerAnimations[4].alignX = 15;
-	gameState->playerAnimations[4].alignY = 23;		
 
 	gameState->currentPlayerBitmap = &gameState->playerAnimations[0];
-
 	gameState->world = PushStruct(&gameState->worldArena, world);
 	world* world = gameState->world;
 	world->tileMap = PushStruct(&gameState->worldArena, tile_map);
@@ -588,8 +581,21 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 					tile_chunk);
 
 	tileMap->tileSideInMeters = 1.4f;
-	
 
+	//Init player ball
+	{
+	    ball_entity ball = {};
+	    
+	    ball.isActive = false;
+	    ball.exists = true;
+	    ball.p = {0};
+	    ball.width = 5;
+	    ball.height = 5;	    
+	    ball.entityBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
+	    gameState->ballEntityIndex = AddEntity(gameState, &ball);
+	}
+
+	
 	// the number of tiles per chunk
 	u32 tilesPerWidth = 33;
 	u32 tilesPerHeight = 9;
@@ -598,16 +604,17 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	u32 screenY = 0;
 	u32 absTileZ = 0;
 
-#define WRITE_NEW_MAP 1
+#define WRITE_NEW_MAP 0
 #define WRITE_BLANK_MAP 1
 #define WRITE_STRUCTURED_MAP 0
-	
+
+	bool32 isA = true;
 #if WRITE_NEW_MAP
 
 	//100 chunks of 9x33 tiles
 
 	debug_open_file_result openedFile = memory->DEBUGPlatformOpenFile("tilemap_test.map");
-	bool32 isA = true;
+
 	for (u32 screenIndex = 0; screenIndex < 100; ++screenIndex)
 	{
 
@@ -618,7 +625,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    tile_value tileValue = {};
 		    tileValue.collisionEnabled = false;
 		    tileValue.tileTexture = e_tile_texture::blueBackground;
-	    u32 absTileX = screenX * tilesPerWidth + tileX;
+		    u32 absTileX = screenX * tilesPerWidth + tileX;
 		    u32 absTileY = screenY * tilesPerHeight + tileY;
 
 #if !WRITE_BLANK_MAP 
@@ -720,6 +727,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     world* world = gameState->world;
     tile_map* tileMap = world->tileMap;
+    ball_entity* ball = (ball_entity*)GetEntity(gameState, gameState->ballEntityIndex);
+    Assert(ball);    
     
 
     //this was 30
@@ -856,6 +865,17 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    ddP.y = -1.0f;
 		}
 
+		if (controller->actionDown.endedDown)
+		{
+
+		    if (!ball->isActive)
+		    {
+			//Spawn/update the ball here
+			ball->isActive = true;
+			ball->p = controllingEntity->p;
+		    }
+		}
+
 		bool32 jumpButtonDetected = false;
 
 		MovePlayer(gameState, controllingEntity, input->dTime, ddP);
@@ -887,23 +907,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 
     entity* cameraFollowingEntity = GetEntity(gameState, gameState->cameraFollowingEntityIndex);
-#if 0    
-    if (cameraFollowingEntity && gameState->cameraFollowingEntity)
-    {
-	if ((cameraFollowingEntity->p.absTileY > gameState->cameraChunkY))
-	{
-	    gameState->cameraP.absTileY += 18;
-	    gameState->prevCameraChunkY = gameState->cameraChunkY;
-	    gameState->cameraChunkY += 18;
-	}
-	else if ((cameraFollowingEntity->p.absTileY < gameState->cameraChunkY) && (cameraFollowingEntity->p.absTileY <= gameState->prevCameraChunkY))
-	{
-	    gameState->cameraP.absTileY -= 18;
-	    gameState->prevCameraChunkY = gameState->cameraChunkY;	    
-	    gameState->cameraChunkY -= 18;
-	}
-    }
-#else
     if (cameraFollowingEntity)
     {
 	tile_map_difference diff = Subtract(tileMap, &cameraFollowingEntity->p, &gameState->cameraP);
@@ -924,7 +927,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    gameState->cameraP.absTileY -= 17;
 	}	
     }
-#endif    
+
     r32 screenCenterX = 0.5f *(r32)buffer->width;
     r32 screenCenterY = 0.5f * (r32)buffer->height;
     for (i32 relRow =  -10; relRow < 10; ++relRow)
@@ -973,7 +976,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		}
 	    }
 #else
-
 	    v2 tileLoc = {screenCenterX - metersToPixels * gameState->cameraP.offset.x +
 		((r32)relColumn) * tileSideInPixels,
 		screenCenterY + metersToPixels * gameState->cameraP.offset.y -
@@ -998,23 +1000,22 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	{
 	    tile_map_difference diff = Subtract(tileMap, &entity->p, &gameState->cameraP);
 
-	    r32 playerR = 1.0f;
-	    r32 playerG = 1.0f;
-	    r32 playerB = 0.0f;
-
 	    r32 playerGroundPointX = screenCenterX + metersToPixels * diff.dXY.x;
 	    r32 playerGroundPointY = screenCenterY - metersToPixels * diff.dXY.y;
 
 	    v2 playerLeftTop = {playerGroundPointX - 0.5f * metersToPixels * entity->width,
 		playerGroundPointY - 0.5f * metersToPixels * entity->height};
 	    v2 entityWidthHeight = {entity->width, entity->height};
-//	    DrawRectangle(buffer, playerLeftTop, playerLeftTop + metersToPixels * entityWidthHeight,
-//			  playerR, playerG, playerB);
-
-//	    player_bitmap* player = &gameState->playerBitmaps[0];
 
 	    player_bitmap* player = gameState->currentPlayerBitmap;
 	    DrawBitmap(buffer, &player->bitmap, playerGroundPointX, playerGroundPointY, player->alignX, player->alignY);
+
+#if 1
+	    if (ball->isActive)
+	    {
+		DrawBitmap(buffer, &ball->entityBitmap, playerGroundPointX, playerGroundPointY, 0, 0);
+	    }
+#endif	    
 	}
     }
 }

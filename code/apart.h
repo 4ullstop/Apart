@@ -246,39 +246,11 @@ void* PushSize_(memory_arena* arena, memory_index size)
 }
 
 
-
 struct world
 {
     tile_map* tileMap;
     tile_map tileMapItems;
 };
-
-struct entity
-{
-    bool32 exists;
-
-    tile_map_position p;
-    u32 facingDirection;
-    v2 dP;
-    r32 width, height;
-
-    bool32 canJump;
-    i32 framesHeld;
-
-    bool32 isInAir;
-};
-
-inline bool32 IsEntityInAir(entity* entity)
-{
-    bool32 result = entity->dP.y != 0.0f;
-    return(result);
-}
-
-inline bool32 EntityAirCheckForCollision(entity* entity)
-{
-    bool32 result = (entity->dP.y != 0.0f) && (entity->dP.x == 0.0f);
-    return(result);    
-}
 
 struct loaded_bitmap
 {
@@ -329,6 +301,42 @@ struct player_anim_bitmap
     i32 numOfSprites;
 };
 
+struct entity
+{
+    bool32 exists;
+
+    tile_map_position p;
+    u32 facingDirection;
+    v2 dP;
+    r32 width, height;
+
+    bool32 canJump;
+    i32 framesHeld;
+
+    bool32 isInAir;
+
+    loaded_bitmap entityBitmap;
+
+};
+
+inline bool32 IsEntityInAir(entity* entity)
+{
+    bool32 result = entity->dP.y != 0.0f;
+    return(result);
+}
+
+inline bool32 EntityAirCheckForCollision(entity* entity)
+{
+    bool32 result = (entity->dP.y != 0.0f) && (entity->dP.x == 0.0f);
+    return(result);    
+}
+
+struct ball_entity : public entity
+{
+    loaded_bitmap ballBitmap;
+    entity* ballEntity;
+    bool32 isActive;    
+};
 
 struct game_state
 {
@@ -363,6 +371,7 @@ struct game_state
     player_bitmap playerAnimations[4];
     player_bitmap* currentPlayerBitmap;
 
+    u32 ballEntityIndex;
     
 };
 

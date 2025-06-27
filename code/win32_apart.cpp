@@ -721,7 +721,7 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 		{
 		    running = false;
 		}
-		else if (VKCode == 'J')
+		else if (VKCode == VK_SPACE)
 		{
 		    Win32ProcessKeyboardMessage(&keyboardController->actionDown, isDown, wasDown);
 		}
@@ -1241,7 +1241,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		    r64 FPS = 0;
 		    r64 MCPF = (r64)(cyclesElapsed / (1000 * 1000));
 
-#if 1
+#if 0
 		    char fpsBuffer[250];
 		    sprintf_s(fpsBuffer, "%.02fms/f, %ff/s, %.02fmc/f\n", msPerFrame, FPS, MCPF);
 		    OutputDebugString(fpsBuffer);
