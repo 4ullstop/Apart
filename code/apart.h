@@ -335,7 +335,8 @@ struct ball_entity : public entity
 {
     loaded_bitmap ballBitmap;
     entity* ballEntity;
-    bool32 isActive;    
+    bool32 isActive;
+    v2 ddP;
 };
 
 struct game_state
@@ -371,7 +372,9 @@ struct game_state
     player_bitmap playerAnimations[4];
     player_bitmap* currentPlayerBitmap;
 
-    u32 ballEntityIndex;
+
+
+    ball_entity* ballEntity;
     
 };
 

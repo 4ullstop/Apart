@@ -496,6 +496,12 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
     }
 }
 
+internal void
+MoveBall(i32 spawnDirection, ball_entity* ball)
+{
+    
+}
+
 extern "C" GAME_GET_SOUND_DATA(GameGetSoundData)
 {
 #if 0
@@ -592,7 +598,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    ball.width = 5;
 	    ball.height = 5;	    
 	    ball.entityBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
-	    gameState->ballEntityIndex = AddEntity(gameState, &ball);
+	    gameState->ballEntity = &ball;
 	}
 
 	
@@ -727,9 +733,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     world* world = gameState->world;
     tile_map* tileMap = world->tileMap;
-    ball_entity* ball = (ball_entity*)GetEntity(gameState, gameState->ballEntityIndex);
-    Assert(ball);    
-    
+    ball_entity* ball = gameState->ballEntity;
+
 
     //this was 30
     i32 tileSideInPixels = 30;
@@ -873,6 +878,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			//Spawn/update the ball here
 			ball->isActive = true;
 			ball->p = controllingEntity->p;
+			ball->ddP = ddP;
 		    }
 		}
 
@@ -900,6 +906,13 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	
     }
 
+    if (ball->isActive)
+    {
+	MovePlayer(gameState, ball, input->dTime, ball->ddP);
+    }
+
+    
+    
     r32 upperLeftX = -30;
     r32 upperLeftY = 0;
     r32 tileWidth = 60;
@@ -1011,9 +1024,15 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    DrawBitmap(buffer, &player->bitmap, playerGroundPointX, playerGroundPointY, player->alignX, player->alignY);
 
 #if 1
-	    if (ball->isActive)
+
 	    {
-		DrawBitmap(buffer, &ball->entityBitmap, playerGroundPointX, playerGroundPointY, 0, 0);
+		if (ball->isActive)
+		{
+		    tile_map_difference ballDiff = Subtract(tileMap, &ball->p, &gameState->cameraP);
+		    r32 ballGroundPointX = screenCenterX + metersToPixels * ballDiff.dXY.x;
+		    r32 ballGroundPointY = screenCenterY - metersToPixels * ballDiff.dXY.y;
+		    DrawBitmap(buffer, &ball->entityBitmap, ballGroundPointX, ballGroundPointY, 0, 0);		    
+		}
 	    }
 #endif	    
 	}
