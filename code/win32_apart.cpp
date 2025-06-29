@@ -555,8 +555,10 @@ Win32ProcessKeyboardMessage(game_button_state* newState, bool32 isDown, bool32 w
     if (newState->endedDown != isDown)
     {
 	newState->endedDown = isDown;
+
 	++newState->halfTransitionCount;
     }
+    newState->wasDown = wasDown;    
 }
 
 internal void
@@ -737,6 +739,10 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 		else if (VKCode == VK_RIGHT)
 		{
 		    Win32ProcessKeyboardMessage(&keyboardController->actionRight, isDown, wasDown);		    
+		}
+		else if (VKCode == VK_TAB)
+		{
+		    Win32ProcessKeyboardMessage(&keyboardController->debugMode, isDown, wasDown);
 		}
 		else if (VKCode == 'P')
 		{

@@ -108,7 +108,7 @@ Inner(v2 a, v2 b)
     return(result);
 }
 
-inline r32
+internal r32
 LengthSq(v2 a)
 {
     r32 result = Inner(a, a);
@@ -116,5 +116,14 @@ LengthSq(v2 a)
     return(result);
 }
 
+internal v2
+NormalizeV2(v2 v)
+{
+    v2 result = {};
+    r32 m = SquareRoot((r32)(pow(v.x, 2.0) + pow(v.y, 2.0)));
+    result.x = v.x / m;
+    result.y = v.y / m;
+    return(result);
+}
 #define APART_MATH_H
 #endif

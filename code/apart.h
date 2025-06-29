@@ -142,7 +142,7 @@ struct game_controller_input
     
     union
     {
-	game_button_state buttons[15];
+	game_button_state buttons[16];
 	struct
 	{
 	    game_button_state moveUp;
@@ -165,6 +165,8 @@ struct game_controller_input
 
 	    game_button_state scrollUp;
 	    game_button_state scrollDown;
+
+	    game_button_state debugMode;
 	    
 	    game_button_state terminator;
 	};
@@ -372,10 +374,10 @@ struct game_state
     player_bitmap playerAnimations[4];
     player_bitmap* currentPlayerBitmap;
 
-
-
     ball_entity* ballEntity;
-    
+
+    bool32 debugMode;
+    loaded_bitmap debugIndicatorBitmap;
 };
 
 #define APART_H

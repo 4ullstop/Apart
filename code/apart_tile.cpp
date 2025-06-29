@@ -193,6 +193,22 @@ IsTileValueEmpty(tile_value tileValue)
     return(empty);
 }
 
+internal tile_map_position
+GetWorldLocationFromMouse(game_input* input, game_offscreen_buffer* buffer, tile_map* tileMap, game_state* gameState)
+{
+    i32 tileSideInPixels = 30;
+    tile_map_position result = {};
+    result.absTileX = input->mouseX;
+    result.absTileY = buffer->height - input->mouseY;
+    result.absTileZ = 0;
+
+    result.absTileX /= tileSideInPixels;
+    result.absTileY /= tileSideInPixels;
+    result = RecanonicalizePosition(tileMap, result);
+    result.absTileY += (gameState->cameraChunkY - 18);
+    return(result);
+}
+
 internal void
 SetTileValueFromMouse(game_input* input, game_offscreen_buffer* buffer, tile_map* tileMap, game_state* gameState, tile_value tileValue)
 {
@@ -201,6 +217,7 @@ SetTileValueFromMouse(game_input* input, game_offscreen_buffer* buffer, tile_map
 	(input->mouseY <= buffer->height) && (input->mouseY >= 0))
     {
 	tile_map_position mousePos = {};
+#if 0	
 	mousePos.absTileX = input->mouseX;
 	mousePos.absTileY = buffer->height - input->mouseY;
 	mousePos.absTileZ = 0;
@@ -209,6 +226,10 @@ SetTileValueFromMouse(game_input* input, game_offscreen_buffer* buffer, tile_map
 	mousePos.absTileY /= tileSideInPixels;
 	mousePos = RecanonicalizePosition(tileMap, mousePos);
 	mousePos.absTileY += (gameState->cameraChunkY - 18);
+#else
+	mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
+#endif	
 	SetTileValue(&gameState->worldArena, tileMap, mousePos.absTileX, mousePos.absTileY, mousePos.absTileZ, tileValue);
     }    
 }
+
