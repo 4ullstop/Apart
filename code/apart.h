@@ -378,6 +378,8 @@ struct game_state
 
     bool32 debugMode;
     loaded_bitmap debugIndicatorBitmap;
+
+    loaded_bitmap mouseCursorBitmap;
 };
 
 #define APART_H

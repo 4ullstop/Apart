@@ -603,6 +603,9 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	gameState->debugIndicatorBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/debug_indicator.bmp");
 	gameState->debugMode = false;
+
+
+	gameState->mouseCursorBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/mouse_cursor.bmp");
 	
 	// the number of tiles per chunk
 	u32 tilesPerWidth = 33;
@@ -1068,4 +1071,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     {
 	DrawBitmap(buffer, &gameState->backgroundBitmaps[0].blueTile, 0, 0, 0, 0);
     }
+
+    DrawBitmap(buffer, &gameState->mouseCursorBitmap, (r32)input->mouseX, (r32)input->mouseY, 20, 20);
 }

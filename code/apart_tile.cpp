@@ -217,18 +217,9 @@ SetTileValueFromMouse(game_input* input, game_offscreen_buffer* buffer, tile_map
 	(input->mouseY <= buffer->height) && (input->mouseY >= 0))
     {
 	tile_map_position mousePos = {};
-#if 0	
-	mousePos.absTileX = input->mouseX;
-	mousePos.absTileY = buffer->height - input->mouseY;
-	mousePos.absTileZ = 0;
 
-	mousePos.absTileX /= tileSideInPixels;
-	mousePos.absTileY /= tileSideInPixels;
-	mousePos = RecanonicalizePosition(tileMap, mousePos);
-	mousePos.absTileY += (gameState->cameraChunkY - 18);
-#else
 	mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
-#endif	
+
 	SetTileValue(&gameState->worldArena, tileMap, mousePos.absTileX, mousePos.absTileY, mousePos.absTileZ, tileValue);
     }    
 }

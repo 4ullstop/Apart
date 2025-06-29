@@ -11,6 +11,7 @@
 global_variable bool32 running;
 global_variable win32_offscreen_buffer globalBackBuffer;
 global_variable bool32 pause;
+global_variable bool32 gameInactive;
 global_variable i64 perfCountFrequency;
 global_variable WINDOWPLACEMENT windowPosition = {sizeof(windowPosition)};
 
@@ -688,6 +689,17 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 	{
 	    running = false;
 	} break;
+	case WM_ACTIVATE:
+	{
+	    if ((msg.wParam & 0xffff) == WA_INACTIVE)
+	    {
+		gameInactive = true;
+	    }
+	    else
+	    {
+		gameInactive = false;
+	    }
+	} break;
 	case WM_SETCURSOR:
 	{
 	    
@@ -1076,6 +1088,8 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 						GetKeyState(VK_LBUTTON) & (1 << 15), 0);
 		    Win32ProcessKeyboardMessage(&newInput->mouseButtons[1],
 						GetKeyState(VK_RBUTTON) & (1 << 15), 0);		    
+
+		    ShowCursor(gameInactive);
 		    
 		    for (DWORD controllerIndex = 0; controllerIndex <  maxControllerCount; ++controllerIndex)
 		    {
