@@ -363,11 +363,52 @@ TestWall(r32 wallX, r32 relX, r32 relY, r32 playerDeltaX, r32 playerDeltaY, r32*
     return(hit);
 }
 
-internal void
-MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
+struct entity_movement_calculations
 {
-    tile_map* tileMap = gameState->world->tileMap;
+    tile_map_position newP;
+    tile_map_position oldP;
+    v2 entityDelta;
+};
 
+struct test_tile_dimensions
+{
+    u32 minTileX;
+    u32 maxTileX;
+    u32 minTileY;
+    u32 maxTileY;
+};
+
+internal void
+MoveBall(void)
+{
+
+}
+
+internal test_tile_dimensions
+GetTestTileDimensions(tile_map_position oldP, tile_map_position newP, tile_map* tileMap, entity* entity)
+{
+    test_tile_dimensions result = {};
+    result.minTileX = Minimum(oldP.absTileX, newP.absTileX);
+    result.minTileY = Minimum(oldP.absTileY, newP.absTileY);
+    result.maxTileX = Maximum(oldP.absTileX, newP.absTileX);
+    result.maxTileY = Maximum(oldP.absTileY, newP.absTileY);
+
+    u32 entityTileWidth = CeilReal32ToInt32(entity->width / tileMap->tileSideInMeters);
+    u32 entityTileHeight = CeilReal32ToInt32(entity->height / tileMap->tileSideInMeters);
+
+    result.minTileX -= entityTileWidth;
+    result.minTileY -= entityTileHeight;
+    result.maxTileX += entityTileWidth;
+    result.maxTileY += entityTileHeight;
+
+    return(result);
+}
+
+internal entity_movement_calculations
+CalculateNewP(tile_map* tileMap, v2 ddP, entity* entity, r32 dt)
+{
+
+    entity_movement_calculations result = {};
     r32 ddPLength = LengthSq(ddP);
     if (ddPLength > 1.0f)
     {
@@ -380,31 +421,26 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
     ddP += -7.0*entity->dP;
     //ddP += -35.0f*entity->dP;
 
-    tile_map_position oldPlayerP = entity->p;
+    result.oldP = entity->p;
 
-    v2 playerDelta = (0.5f * ddP * Square(dt) + entity->dP*dt);
+    result.entityDelta = (0.5f * ddP * Square(dt) + entity->dP*dt);
 
-#if 0
-    r32 gravity = IsEntityInAir(entity) ? -10.0f : -9.81f;
-#else
     r32 gravity = 0.0f;
-#endif    
     entity->dP = ddP * dt + entity->dP;
 
-    tile_map_position newPlayerP = Offset(tileMap, oldPlayerP, playerDelta);
+    result.newP = Offset(tileMap, result.oldP, result.entityDelta);
+    return(result);
+}
 
-    u32 minTileX = Minimum(oldPlayerP.absTileX, newPlayerP.absTileX);
-    u32 minTileY = Minimum(oldPlayerP.absTileY, newPlayerP.absTileY);
-    u32 maxTileX = Maximum(oldPlayerP.absTileX, newPlayerP.absTileX);
-    u32 maxTileY = Maximum(oldPlayerP.absTileY, newPlayerP.absTileY);
+internal void
+MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
+{
+    tile_map* tileMap = gameState->world->tileMap;
 
-    u32 entityTileWidth = CeilReal32ToInt32(entity->width / tileMap->tileSideInMeters);
-    u32 entityTileHeight = CeilReal32ToInt32(entity->height / tileMap->tileSideInMeters);
+    entity_movement_calculations playerInfo = CalculateNewP(tileMap, ddP, entity, dt);
 
-    minTileX -= entityTileWidth;
-    minTileY -= entityTileHeight;
-    maxTileX += entityTileWidth;
-    maxTileY += entityTileHeight;
+
+    test_tile_dimensions dim = GetTestTileDimensions(playerInfo.oldP, playerInfo.newP, tileMap, entity);
 
     u32 absTileZ = entity->p.absTileZ;
 
@@ -412,17 +448,19 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
     r32 tMin = 1.0f;
 
     bool32 isFloor = false;
+    
+
     for (u32 iteration = 0; (iteration < 4) && (tRemaining > 0.0f); ++iteration)
     {
 	tMin = 1.0f;
 	v2 wallNormal = {};
 
-	Assert((maxTileX - minTileX) < 32);
-	Assert((maxTileY - minTileY) < 32);
-
-	for (u32 absTileY = minTileY; absTileY <= maxTileY; ++absTileY)
+	Assert((dim.maxTileX - dim.minTileX) < 32);
+	Assert((dim.maxTileY - dim.minTileY) < 32);
+///
+	for (u32 absTileY = dim.minTileY; absTileY <= dim.maxTileY; ++absTileY)
 	{
-	    for (u32 absTileX = minTileX; absTileX <= maxTileX; ++absTileX)
+	    for (u32 absTileX = dim.minTileX; absTileX <= dim.maxTileX; ++absTileX)
 	    {
 		tile_map_position testTileP = CenteredTilePoint(absTileX, absTileY, absTileZ);
 		tile_value tileValue = GetTileValue(tileMap, testTileP);
@@ -437,22 +475,22 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 		    tile_map_difference relOldPlayerP = Subtract(tileMap, &entity->p, &testTileP);
 		    v2 rel = relOldPlayerP.dXY;
 		    
-		    if (TestWall(minCorner.x, rel.x, rel.y, playerDelta.x, playerDelta.y,
+		    if (TestWall(minCorner.x, rel.x, rel.y, playerInfo.entityDelta.x, playerInfo.entityDelta.y,
 				 &tMin, minCorner.y, maxCorner.y))
 		    {
 			wallNormal = v2{-1, 0};
 		    }
-		    if (TestWall(maxCorner.x, rel.x, rel.y, playerDelta.x, playerDelta.y,
+		    if (TestWall(maxCorner.x, rel.x, rel.y, playerInfo.entityDelta.x, playerInfo.entityDelta.y,
 				 &tMin, minCorner.y, maxCorner.y))
 		    {
 			wallNormal = v2{1, 0};
 		    }
-		    if (TestWall(minCorner.y, rel.y, rel.x, playerDelta.y, playerDelta.x,
+		    if (TestWall(minCorner.y, rel.y, rel.x, playerInfo.entityDelta.y, playerInfo.entityDelta.x,
 				 &tMin, minCorner.x, maxCorner.x))
 		    {
 			wallNormal = v2{0, -1};
 		    }
-		    if (TestWall(maxCorner.y, rel.y, rel.x, playerDelta.y, playerDelta.x,
+		    if (TestWall(maxCorner.y, rel.y, rel.x, playerInfo.entityDelta.y, playerInfo.entityDelta.x,
 				 &tMin, minCorner.x, maxCorner.x))
 		    {
 			wallNormal = v2{0, 1};
@@ -461,13 +499,16 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 		}
 	    }
 	}
-	entity->p = Offset(tileMap, entity->p, tMin*playerDelta);
+///	
+	entity->p = Offset(tileMap, entity->p, tMin*playerInfo.entityDelta);
 	entity->dP = entity->dP - 1*Inner(entity->dP, wallNormal)*wallNormal;
-	playerDelta = playerDelta - 1 * Inner(playerDelta, wallNormal)*wallNormal;
+	//I need to be able to edit the bounciness value as well as the way the object bounces
+	playerInfo.entityDelta = playerInfo.entityDelta - 1 * Inner(playerInfo.entityDelta, wallNormal)*wallNormal;
 	tRemaining -= tMin;
     }
 
-    
+
+    //I don't need this for the rest of the entity types
     if ((entity->dP.x == 0) && (entity->dP.y == 0))
     {
 	

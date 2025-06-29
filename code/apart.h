@@ -319,6 +319,7 @@ struct entity
 
     loaded_bitmap entityBitmap;
 
+    r32 entitySpeed;
 };
 
 inline bool32 IsEntityInAir(entity* entity)
