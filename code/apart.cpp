@@ -379,12 +379,6 @@ struct test_tile_dimensions
     u32 maxTileY;
 };
 
-internal void
-MoveBall(void)
-{
-    
-}
-
 internal test_tile_dimensions
 GetTestTileDimensions(tile_map_position oldP, tile_map_position newP, tile_map* tileMap, entity* entity)
 {
@@ -437,7 +431,10 @@ CalculateNewP(tile_map* tileMap, v2 ddP, entity* entity, r32 dt)
 internal void
 EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileMap, entity_movement_calculations* entityInfo, bool32 isFloor, r32* tMin, v2* wallNormal)
 {
+    Assert((dim.maxTileX - dim.minTileX) < 32);
+    Assert((dim.maxTileY - dim.minTileY) < 32);
 
+    
     u32 absTileZ = entity->p.absTileZ;
     
 
@@ -484,6 +481,34 @@ EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileM
     }    
 }
 
+internal void
+MoveBall(game_state* gameState, entity* entity, r32 dt, v2 ddP)
+{
+    tile_map* tileMap = gameState->world->tileMap;
+    entity_movement_calculations ballInfo = CalculateNewP(tileMap, ddP, entity, dt);
+
+    test_tile_dimensions dim = GetTestTileDimensions(ballInfo.oldP, ballInfo.newP, tileMap, entity);
+
+    r32 tRemaining = 1.0f;
+    r32 tMin = 1.0f;
+
+    bool32 isFloor = false;
+
+    for(u32 iteration = 0; (iteration < 4) && (tRemaining > 0.0f); ++iteration)
+    {
+	tMin = 1.0f;
+	v2 wallNormal = {};
+
+	EntityCollisionRoutine(dim, entity, tileMap, &ballInfo, isFloor, &tMin, &wallNormal);
+
+	entity->p = Offset(tileMap, entity->p, tMin*ballInfo.entityDelta);
+	entity->dP = entity->dP - 1*Inner(entity->dP, wallNormal)*wallNormal;
+	ballInfo.entityDelta = ballInfo.entityDelta - 1 * Inner(ballInfo.entityDelta, wallNormal)*wallNormal;
+	tRemaining -= tMin;
+    }
+}    
+
+
 ///
 internal void
 MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
@@ -495,7 +520,7 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 
     test_tile_dimensions dim = GetTestTileDimensions(playerInfo.oldP, playerInfo.newP, tileMap, entity);
 
-    u32 absTileZ = entity->p.absTileZ;
+
 
     r32 tRemaining = 1.0f;
     r32 tMin = 1.0f;
@@ -507,9 +532,6 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
     {
 	tMin = 1.0f;
 	v2 wallNormal = {};
-
-	Assert((dim.maxTileX - dim.minTileX) < 32);
-	Assert((dim.maxTileY - dim.minTileY) < 32);
 
 	EntityCollisionRoutine(dim, entity, tileMap, &playerInfo, isFloor, &tMin, &wallNormal);
 
@@ -987,7 +1009,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     if (ball->isActive)
     {
-	MovePlayer(gameState, ball, input->dTime, ball->ddP);
+	MoveBall(gameState, ball, input->dTime, ball->ddP);
     }
 
     
