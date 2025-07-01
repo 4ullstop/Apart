@@ -363,6 +363,7 @@ TestWall(r32 wallX, r32 relX, r32 relY, r32 playerDeltaX, r32 playerDeltaY, r32*
     return(hit);
 }
 
+///This might show that after implementing this it's time to put all of it into a separate entity file
 struct entity_movement_calculations
 {
     tile_map_position newP;
@@ -381,7 +382,7 @@ struct test_tile_dimensions
 internal void
 MoveBall(void)
 {
-
+    
 }
 
 internal test_tile_dimensions
@@ -432,6 +433,58 @@ CalculateNewP(tile_map* tileMap, v2 ddP, entity* entity, r32 dt)
     return(result);
 }
 
+//This is kind of a magic function but it is what it is
+internal void
+EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileMap, entity_movement_calculations* entityInfo, bool32 isFloor, r32* tMin, v2* wallNormal)
+{
+
+    u32 absTileZ = entity->p.absTileZ;
+    
+
+    for (u32 absTileY = dim.minTileY; absTileY <= dim.maxTileY; ++absTileY)
+    {
+	for (u32 absTileX = dim.minTileX; absTileX <= dim.maxTileX; ++absTileX)
+	{
+	    tile_map_position testTileP = CenteredTilePoint(absTileX, absTileY, absTileZ);
+	    tile_value tileValue = GetTileValue(tileMap, testTileP);
+
+	    if (!IsTileValueEmpty(tileValue))
+	    {
+		r32 diameterW = tileMap->tileSideInMeters + entity->width;
+		r32 diameterH = tileMap->tileSideInMeters + entity->height;
+		v2 minCorner = -0.5f*v2{diameterW, diameterH};
+		v2 maxCorner = 0.5f*v2{diameterW, diameterH};
+
+		tile_map_difference relOldPlayerP = Subtract(tileMap, &entity->p, &testTileP);
+		v2 rel = relOldPlayerP.dXY;
+		    
+		if (TestWall(minCorner.x, rel.x, rel.y, entityInfo->entityDelta.x, entityInfo->entityDelta.y,
+			     tMin, minCorner.y, maxCorner.y))
+		{
+		    *wallNormal = v2{-1, 0};
+		}
+		if (TestWall(maxCorner.x, rel.x, rel.y, entityInfo->entityDelta.x, entityInfo->entityDelta.y,
+			     tMin, minCorner.y, maxCorner.y))
+		{
+		    *wallNormal = v2{1, 0};
+		}
+		if (TestWall(minCorner.y, rel.y, rel.x, entityInfo->entityDelta.y, entityInfo->entityDelta.x,
+			     tMin, minCorner.x, maxCorner.x))
+		{
+		    *wallNormal = v2{0, -1};
+		}
+		if (TestWall(maxCorner.y, rel.y, rel.x, entityInfo->entityDelta.y, entityInfo->entityDelta.x,
+			     tMin, minCorner.x, maxCorner.x))
+		{
+		    *wallNormal = v2{0, 1};
+		    isFloor = true;
+		}		    
+	    }
+	}
+    }    
+}
+
+///
 internal void
 MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 {
@@ -457,49 +510,9 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 
 	Assert((dim.maxTileX - dim.minTileX) < 32);
 	Assert((dim.maxTileY - dim.minTileY) < 32);
-///
-	for (u32 absTileY = dim.minTileY; absTileY <= dim.maxTileY; ++absTileY)
-	{
-	    for (u32 absTileX = dim.minTileX; absTileX <= dim.maxTileX; ++absTileX)
-	    {
-		tile_map_position testTileP = CenteredTilePoint(absTileX, absTileY, absTileZ);
-		tile_value tileValue = GetTileValue(tileMap, testTileP);
 
-		if (!IsTileValueEmpty(tileValue))
-		{
-		    r32 diameterW = tileMap->tileSideInMeters + entity->width;
-		    r32 diameterH = tileMap->tileSideInMeters + entity->height;
-		    v2 minCorner = -0.5f*v2{diameterW, diameterH};
-		    v2 maxCorner = 0.5f*v2{diameterW, diameterH};
+	EntityCollisionRoutine(dim, entity, tileMap, &playerInfo, isFloor, &tMin, &wallNormal);
 
-		    tile_map_difference relOldPlayerP = Subtract(tileMap, &entity->p, &testTileP);
-		    v2 rel = relOldPlayerP.dXY;
-		    
-		    if (TestWall(minCorner.x, rel.x, rel.y, playerInfo.entityDelta.x, playerInfo.entityDelta.y,
-				 &tMin, minCorner.y, maxCorner.y))
-		    {
-			wallNormal = v2{-1, 0};
-		    }
-		    if (TestWall(maxCorner.x, rel.x, rel.y, playerInfo.entityDelta.x, playerInfo.entityDelta.y,
-				 &tMin, minCorner.y, maxCorner.y))
-		    {
-			wallNormal = v2{1, 0};
-		    }
-		    if (TestWall(minCorner.y, rel.y, rel.x, playerInfo.entityDelta.y, playerInfo.entityDelta.x,
-				 &tMin, minCorner.x, maxCorner.x))
-		    {
-			wallNormal = v2{0, -1};
-		    }
-		    if (TestWall(maxCorner.y, rel.y, rel.x, playerInfo.entityDelta.y, playerInfo.entityDelta.x,
-				 &tMin, minCorner.x, maxCorner.x))
-		    {
-			wallNormal = v2{0, 1};
-			isFloor = true;
-		    }		    
-		}
-	    }
-	}
-///	
 	entity->p = Offset(tileMap, entity->p, tMin*playerInfo.entityDelta);
 	entity->dP = entity->dP - 1*Inner(entity->dP, wallNormal)*wallNormal;
 	//I need to be able to edit the bounciness value as well as the way the object bounces

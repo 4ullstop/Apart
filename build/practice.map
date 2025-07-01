@@ -1,6 +1,6 @@
  apart
 
- Timestamp is 68617f01 (Sun Jun 29 13:59:29 2025)
+ Timestamp is 68640639 (Tue Jul  1 12:00:57 2025)
 
  Preferred load address is 0000000180000000
 
@@ -82,8 +82,8 @@
  0000:00000000       __ImageBase                0000000180000000     <linker-defined>
  0001:000064d0       ?PushSize_@@YAPEAXPEAUmemory_arena@@_K@Z 00000001800074d0 f   apart.obj
  0001:000069b0       ?Subtract@@YA?AUtile_map_difference@@PEAUtile_map@@PEAUtile_map_position@@1@Z 00000001800079b0 f   apart.obj
- 0001:00008950       GameGetSoundData           0000000180009950 f   apart.obj
- 0001:00008960       GameUpdateAndRender        0000000180009960 f   apart.obj
+ 0001:00008a30       GameGetSoundData           0000000180009a30 f   apart.obj
+ 0001:00008a40       GameUpdateAndRender        0000000180009a40 f   apart.obj
  0001:0000b190       ??D@YA?AUv2@@MU0@@Z        000000018000c190 f i apart.obj
  0001:0000b1e0       ??D@YA?AUv2@@U0@M@Z        000000018000c1e0 f i apart.obj
  0001:0000b230       ??G@YA?AUv2@@U0@0@Z        000000018000c230 f i apart.obj
@@ -4693,6 +4693,7 @@
  0000:00000060       _volmd                     0000000180000060     apart.obj
  0000:00000070       _volmd                     0000000180000070     apart.obj
  0000:00000080       _volmd                     0000000180000080     apart.obj
+ 0000:00000090       _volmd                     0000000180000090     apart.obj
  0001:000063b0       ?LengthSq@@YAMUv2@@@Z      00000001800073b0 f   apart.obj
  0001:000063e0       ?NormalizeV2@@YA?AUv2@@U1@@Z 00000001800073e0 f   apart.obj
  0001:00006490       ?InitializeArena@@YAXPEAUmemory_arena@@_KPEAE@Z 0000000180007490 f   apart.obj
@@ -4711,7 +4712,8 @@
  0001:00007ad0       ?TestWall@@YAHMMMMMPEAMMM@Z 0000000180008ad0 f   apart.obj
  0001:00007be0       ?GetTestTileDimensions@@YA?AUtest_tile_dimensions@@Utile_map_position@@0PEAUtile_map@@PEAUentity@@@Z 0000000180008be0 f   apart.obj
  0001:00007dc0       ?CalculateNewP@@YA?AUentity_movement_calculations@@PEAUtile_map@@Uv2@@PEAUentity@@M@Z 0000000180008dc0 f   apart.obj
- 0001:00008040       ?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 0000000180009040 f   apart.obj
+ 0001:00008040       ?EntityCollisionRoutine@@YAXUtest_tile_dimensions@@PEAUentity@@PEAUtile_map@@PEAUentity_movement_calculations@@HPEAMPEAUv2@@@Z 0000000180009040 f   apart.obj
+ 0001:00008570       ?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 0000000180009570 f   apart.obj
  0001:0000bdc0       $$000000                   000000018000cdc0     LIBCMT:chkstk.obj
  0001:0000be40       $$000000                   000000018000ce40     LIBCMT:amdsecgs.obj
  0001:0000be7c       ?dllmain_crt_dispatch@@YAHQEAUHINSTANCE__@@KQEAX@Z 000000018000ce7c f   LIBCMT:dll_dllmain.obj
@@ -5852,15 +5854,15 @@
  0001:0008a4ee       ?fin$0@?0??__acrt_stdio_allocate_stream@@YA?AV__crt_stdio_stream@@XZ@4HA 000000018008b4ee f   libucrt:stream.obj
  0001:0008a510       common_control87$filt$0    000000018008b510 f   libucrt:ieee.obj
  0001:0008a550       _IsNonwritableInCurrentImage$filt$0 000000018008b550 f   LIBCMT:pesect.obj
- 0002:00000be0       $SG5389                    000000018008dbe0     apart.obj
- 0002:00000bf8       $SG5390                    000000018008dbf8     apart.obj
- 0002:00000c10       $SG5391                    000000018008dc10     apart.obj
- 0002:00000c30       $SG5392                    000000018008dc30     apart.obj
- 0002:00000c48       $SG5393                    000000018008dc48     apart.obj
- 0002:00000c58       $SG5394                    000000018008dc58     apart.obj
- 0002:00000c70       $SG5395                    000000018008dc70     apart.obj
- 0002:00000c88       $SG5396                    000000018008dc88     apart.obj
- 0002:00000ca0       $SG5408                    000000018008dca0     apart.obj
+ 0002:00000be0       $SG5400                    000000018008dbe0     apart.obj
+ 0002:00000bf8       $SG5401                    000000018008dbf8     apart.obj
+ 0002:00000c10       $SG5402                    000000018008dc10     apart.obj
+ 0002:00000c30       $SG5403                    000000018008dc30     apart.obj
+ 0002:00000c48       $SG5404                    000000018008dc48     apart.obj
+ 0002:00000c58       $SG5405                    000000018008dc58     apart.obj
+ 0002:00000c70       $SG5406                    000000018008dc70     apart.obj
+ 0002:00000c88       $SG5407                    000000018008dc88     apart.obj
+ 0002:00000ca0       $SG5419                    000000018008dca0     apart.obj
  0002:00000d68       GS_ExceptionPointers       000000018008dd68     LIBCMT:gs_report.obj
  0002:00000db0       ?tokenTable@@3QBUStringLiteral@@B 000000018008ddb0     libvcruntime:undname.obj
  0002:00000ec0       ?nameTable@@3QBUStringLiteral@@B 000000018008dec0     libvcruntime:undname.obj
@@ -7740,8 +7742,9 @@
  0002:00019074       $unwind$?TestWall@@YAHMMMMMPEAMMM@Z 00000001800a6074     apart.obj
  0002:0001907c       $unwind$?GetTestTileDimensions@@YA?AUtest_tile_dimensions@@Utile_map_position@@0PEAUtile_map@@PEAUentity@@@Z 00000001800a607c     apart.obj
  0002:00019090       $unwind$?CalculateNewP@@YA?AUentity_movement_calculations@@PEAUtile_map@@Uv2@@PEAUentity@@M@Z 00000001800a6090     apart.obj
- 0002:000190a4       $unwind$?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 00000001800a60a4     apart.obj
- 0002:000190b8       $unwind$GameUpdateAndRender 00000001800a60b8     apart.obj
+ 0002:000190a4       $unwind$?EntityCollisionRoutine@@YAXUtest_tile_dimensions@@PEAUentity@@PEAUtile_map@@PEAUentity_movement_calculations@@HPEAMPEAUv2@@@Z 00000001800a60a4     apart.obj
+ 0002:000190b8       $unwind$?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 00000001800a60b8     apart.obj
+ 0002:000190cc       $unwind$GameUpdateAndRender 00000001800a60cc     apart.obj
  0002:000197d0       .edata                     00000001800a67d0     apart.exp
  0002:000197f8       rgpv                       00000001800a67f8     apart.exp
  0002:00019800       rgszName                   00000001800a6800     apart.exp
