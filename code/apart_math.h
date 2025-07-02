@@ -125,5 +125,12 @@ NormalizeV2(v2 v)
     result.y = v.y / m;
     return(result);
 }
+
+internal v2
+ReflectionVector(v2 v, v2 n)
+{
+    v2 result = v - 2 * Inner(v, n) * n;
+    return(result);
+}
 #define APART_MATH_H
 #endif

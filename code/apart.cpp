@@ -482,7 +482,7 @@ EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileM
 }
 
 internal void
-MoveBall(game_state* gameState, entity* entity, r32 dt, v2 ddP)
+MoveBall(game_state* gameState, ball_entity* entity, r32 dt, v2 ddP)
 {
     tile_map* tileMap = gameState->world->tileMap;
     entity_movement_calculations ballInfo = CalculateNewP(tileMap, ddP, entity, dt);
@@ -494,6 +494,7 @@ MoveBall(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 
     bool32 isFloor = false;
 
+    v2 vReflection = {};
     for(u32 iteration = 0; (iteration < 4) && (tRemaining > 0.0f); ++iteration)
     {
 	tMin = 1.0f;
@@ -502,10 +503,19 @@ MoveBall(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 	EntityCollisionRoutine(dim, entity, tileMap, &ballInfo, isFloor, &tMin, &wallNormal);
 
 	entity->p = Offset(tileMap, entity->p, tMin*ballInfo.entityDelta);
-	entity->dP = entity->dP - 1*Inner(entity->dP, wallNormal)*wallNormal;
+	vReflection = ReflectionVector(entity->dP, wallNormal);
+
+	
+//	entity->dP = entity->dP - 1*Inner(entity->dP, wallNormal)*wallNormal;
+
+	entity->dP = vReflection;
+
+	
 	ballInfo.entityDelta = ballInfo.entityDelta - 1 * Inner(ballInfo.entityDelta, wallNormal)*wallNormal;
+//	ballInfo.entityDelta = ballInfo.entityDelta - 1 * vReflection;
 	tRemaining -= tMin;
     }
+    entity->ddP = entity->dP;
 }    
 
 
