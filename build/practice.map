@@ -1,6 +1,6 @@
  apart
 
- Timestamp is 68649dab (Tue Jul  1 22:47:07 2025)
+ Timestamp is 68656304 (Wed Jul  2 12:49:08 2025)
 
  Preferred load address is 0000000180000000
 
@@ -4707,17 +4707,17 @@
  0001:00006b80       ?IsTileValueEmpty@@YAHUtile_value@@@Z 0000000180007b80 f   apart.obj
  0001:00006bc0       ?GetWorldLocationFromMouse@@YA?AUtile_map_position@@PEAUgame_input@@PEAUgame_offscreen_buffer@@PEAUtile_map@@PEAUgame_state@@@Z 0000000180007bc0 f   apart.obj
  0001:00006d10       ?SetTileValueFromMouse@@YAXPEAUgame_input@@PEAUgame_offscreen_buffer@@PEAUtile_map@@PEAUgame_state@@Utile_value@@@Z 0000000180007d10 f   apart.obj
- 0001:00006e80       ?DEBUGLoadBMP@@YA?AUloaded_bitmap@@PEAUthread_context@@P6A?AUdebug_read_file_result@@0PEAD@Z1@Z 0000000180007e80 f   apart.obj
- 0001:00007180       ?DrawBitmap@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@MMHH@Z 0000000180008180 f   apart.obj
- 0001:00007600       ?DrawBackgroundTile@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@Uv2@@2@Z 0000000180008600 f   apart.obj
- 0001:00007a10       ?AddEntity@@YAIPEAUgame_state@@@Z 0000000180008a10 f   apart.obj
- 0001:00007a80       ?InitializePlayer@@YAXPEAUgame_state@@I@Z 0000000180008a80 f   apart.obj
- 0001:00007b40       ?TestWall@@YAHMMMMMPEAMMM@Z 0000000180008b40 f   apart.obj
- 0001:00007c50       ?GetTestTileDimensions@@YA?AUtest_tile_dimensions@@Utile_map_position@@0PEAUtile_map@@PEAUentity@@@Z 0000000180008c50 f   apart.obj
- 0001:00007e30       ?CalculateNewP@@YA?AUentity_movement_calculations@@PEAUtile_map@@Uv2@@PEAUentity@@M@Z 0000000180008e30 f   apart.obj
- 0001:000080b0       ?EntityCollisionRoutine@@YAXUtest_tile_dimensions@@PEAUentity@@PEAUtile_map@@PEAUentity_movement_calculations@@HPEAMPEAUv2@@@Z 00000001800090b0 f   apart.obj
- 0001:00008630       ?MoveBall@@YAXPEAUgame_state@@PEAUball_entity@@MUv2@@@Z 0000000180009630 f   apart.obj
- 0001:000089c0       ?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 00000001800099c0 f   apart.obj
+ 0001:00006e80       ?AddEntity@@YAIPEAUgame_state@@@Z 0000000180007e80 f   apart.obj
+ 0001:00006ef0       ?InitializePlayer@@YAXPEAUgame_state@@I@Z 0000000180007ef0 f   apart.obj
+ 0001:00006fb0       ?TestWall@@YAHMMMMMPEAMMM@Z 0000000180007fb0 f   apart.obj
+ 0001:000070c0       ?GetTestTileDimensions@@YA?AUtest_tile_dimensions@@Utile_map_position@@0PEAUtile_map@@PEAUentity@@@Z 00000001800080c0 f   apart.obj
+ 0001:000072a0       ?CalculateNewP@@YA?AUentity_movement_calculations@@PEAUtile_map@@Uv2@@PEAUentity@@M@Z 00000001800082a0 f   apart.obj
+ 0001:00007520       ?EntityCollisionRoutine@@YAXUtest_tile_dimensions@@PEAUentity@@PEAUtile_map@@PEAUentity_movement_calculations@@HPEAMPEAUv2@@@Z 0000000180008520 f   apart.obj
+ 0001:00007aa0       ?MoveBall@@YAXPEAUgame_state@@PEAUball_entity@@MUv2@@@Z 0000000180008aa0 f   apart.obj
+ 0001:00007e30       ?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 0000000180008e30 f   apart.obj
+ 0001:000082a0       ?DEBUGLoadBMP@@YA?AUloaded_bitmap@@PEAUthread_context@@P6A?AUdebug_read_file_result@@0PEAD@Z1@Z 00000001800092a0 f   apart.obj
+ 0001:000085a0       ?DrawBitmap@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@MMHH@Z 00000001800095a0 f   apart.obj
+ 0001:00008a20       ?DrawBackgroundTile@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@Uv2@@2@Z 0000000180009a20 f   apart.obj
  0001:0000bdc0       $$000000                   000000018000cdc0     LIBCMT:chkstk.obj
  0001:0000be40       $$000000                   000000018000ce40     LIBCMT:amdsecgs.obj
  0001:0000be7c       ?dllmain_crt_dispatch@@YAHQEAUHINSTANCE__@@KQEAX@Z 000000018000ce7c f   LIBCMT:dll_dllmain.obj
@@ -5858,15 +5858,15 @@
  0001:0008a4ee       ?fin$0@?0??__acrt_stdio_allocate_stream@@YA?AV__crt_stdio_stream@@XZ@4HA 000000018008b4ee f   libucrt:stream.obj
  0001:0008a510       common_control87$filt$0    000000018008b510 f   libucrt:ieee.obj
  0001:0008a550       _IsNonwritableInCurrentImage$filt$0 000000018008b550 f   LIBCMT:pesect.obj
- 0002:00000be0       $SG5444                    000000018008dbe0     apart.obj
- 0002:00000bf8       $SG5445                    000000018008dbf8     apart.obj
- 0002:00000c10       $SG5446                    000000018008dc10     apart.obj
- 0002:00000c30       $SG5447                    000000018008dc30     apart.obj
- 0002:00000c48       $SG5448                    000000018008dc48     apart.obj
- 0002:00000c58       $SG5449                    000000018008dc58     apart.obj
- 0002:00000c70       $SG5450                    000000018008dc70     apart.obj
- 0002:00000c88       $SG5451                    000000018008dc88     apart.obj
- 0002:00000ca0       $SG5463                    000000018008dca0     apart.obj
+ 0002:00000be0       $SG5441                    000000018008dbe0     apart.obj
+ 0002:00000bf8       $SG5442                    000000018008dbf8     apart.obj
+ 0002:00000c10       $SG5443                    000000018008dc10     apart.obj
+ 0002:00000c30       $SG5444                    000000018008dc30     apart.obj
+ 0002:00000c48       $SG5445                    000000018008dc48     apart.obj
+ 0002:00000c58       $SG5446                    000000018008dc58     apart.obj
+ 0002:00000c70       $SG5447                    000000018008dc70     apart.obj
+ 0002:00000c88       $SG5448                    000000018008dc88     apart.obj
+ 0002:00000ca0       $SG5460                    000000018008dca0     apart.obj
  0002:00000d68       GS_ExceptionPointers       000000018008dd68     LIBCMT:gs_report.obj
  0002:00000db0       ?tokenTable@@3QBUStringLiteral@@B 000000018008ddb0     libvcruntime:undname.obj
  0002:00000ec0       ?nameTable@@3QBUStringLiteral@@B 000000018008dec0     libvcruntime:undname.obj
@@ -7739,17 +7739,17 @@
  0002:00019020       $unwind$?IsTileValueEmpty@@YAHUtile_value@@@Z 00000001800a6020     apart.obj
  0002:00019028       $unwind$?GetWorldLocationFromMouse@@YA?AUtile_map_position@@PEAUgame_input@@PEAUgame_offscreen_buffer@@PEAUtile_map@@PEAUgame_state@@@Z 00000001800a6028     apart.obj
  0002:0001903c       $unwind$?SetTileValueFromMouse@@YAXPEAUgame_input@@PEAUgame_offscreen_buffer@@PEAUtile_map@@PEAUgame_state@@Utile_value@@@Z 00000001800a603c     apart.obj
- 0002:00019050       $unwind$?DEBUGLoadBMP@@YA?AUloaded_bitmap@@PEAUthread_context@@P6A?AUdebug_read_file_result@@0PEAD@Z1@Z 00000001800a6050     apart.obj
- 0002:0001905c       $unwind$?DrawBitmap@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@MMHH@Z 00000001800a605c     apart.obj
- 0002:00019064       $unwind$?DrawBackgroundTile@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@Uv2@@2@Z 00000001800a6064     apart.obj
- 0002:0001906c       $unwind$?AddEntity@@YAIPEAUgame_state@@@Z 00000001800a606c     apart.obj
- 0002:00019074       $unwind$?InitializePlayer@@YAXPEAUgame_state@@I@Z 00000001800a6074     apart.obj
- 0002:0001907c       $unwind$?TestWall@@YAHMMMMMPEAMMM@Z 00000001800a607c     apart.obj
- 0002:00019084       $unwind$?GetTestTileDimensions@@YA?AUtest_tile_dimensions@@Utile_map_position@@0PEAUtile_map@@PEAUentity@@@Z 00000001800a6084     apart.obj
- 0002:00019098       $unwind$?CalculateNewP@@YA?AUentity_movement_calculations@@PEAUtile_map@@Uv2@@PEAUentity@@M@Z 00000001800a6098     apart.obj
- 0002:000190ac       $unwind$?EntityCollisionRoutine@@YAXUtest_tile_dimensions@@PEAUentity@@PEAUtile_map@@PEAUentity_movement_calculations@@HPEAMPEAUv2@@@Z 00000001800a60ac     apart.obj
- 0002:000190c0       $unwind$?MoveBall@@YAXPEAUgame_state@@PEAUball_entity@@MUv2@@@Z 00000001800a60c0     apart.obj
- 0002:000190d4       $unwind$?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 00000001800a60d4     apart.obj
+ 0002:00019050       $unwind$?AddEntity@@YAIPEAUgame_state@@@Z 00000001800a6050     apart.obj
+ 0002:00019058       $unwind$?InitializePlayer@@YAXPEAUgame_state@@I@Z 00000001800a6058     apart.obj
+ 0002:00019060       $unwind$?TestWall@@YAHMMMMMPEAMMM@Z 00000001800a6060     apart.obj
+ 0002:00019068       $unwind$?GetTestTileDimensions@@YA?AUtest_tile_dimensions@@Utile_map_position@@0PEAUtile_map@@PEAUentity@@@Z 00000001800a6068     apart.obj
+ 0002:0001907c       $unwind$?CalculateNewP@@YA?AUentity_movement_calculations@@PEAUtile_map@@Uv2@@PEAUentity@@M@Z 00000001800a607c     apart.obj
+ 0002:00019090       $unwind$?EntityCollisionRoutine@@YAXUtest_tile_dimensions@@PEAUentity@@PEAUtile_map@@PEAUentity_movement_calculations@@HPEAMPEAUv2@@@Z 00000001800a6090     apart.obj
+ 0002:000190a4       $unwind$?MoveBall@@YAXPEAUgame_state@@PEAUball_entity@@MUv2@@@Z 00000001800a60a4     apart.obj
+ 0002:000190b8       $unwind$?MovePlayer@@YAXPEAUgame_state@@PEAUentity@@MUv2@@@Z 00000001800a60b8     apart.obj
+ 0002:000190cc       $unwind$?DEBUGLoadBMP@@YA?AUloaded_bitmap@@PEAUthread_context@@P6A?AUdebug_read_file_result@@0PEAD@Z1@Z 00000001800a60cc     apart.obj
+ 0002:000190d8       $unwind$?DrawBitmap@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@MMHH@Z 00000001800a60d8     apart.obj
+ 0002:000190e0       $unwind$?DrawBackgroundTile@@YAXPEAUgame_offscreen_buffer@@PEAUloaded_bitmap@@Uv2@@2@Z 00000001800a60e0     apart.obj
  0002:000190e8       $unwind$GameUpdateAndRender 00000001800a60e8     apart.obj
  0002:000197d0       .edata                     00000001800a67d0     apart.exp
  0002:000197f8       rgpv                       00000001800a67f8     apart.exp
