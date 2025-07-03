@@ -35,8 +35,9 @@ struct tile_chunk_position
 enum e_tile_texture : u8
 {
     blueBackground,
-    blueBrick,
-    grayBrick
+	blueBrick,
+	goal,
+	blueBackgroundCursor,
 };
 
 #pragma pack(push, 1)

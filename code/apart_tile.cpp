@@ -202,8 +202,10 @@ GetWorldLocationFromMouse(game_input* input, game_offscreen_buffer* buffer, tile
     result.absTileY = buffer->height - input->mouseY;
     result.absTileZ = 0;
 
-    result.absTileX /= tileSideInPixels;
-    result.absTileY /= tileSideInPixels;
+//    result.absTileX /= tileSideInPixels;
+    result.absTileX = CeilReal32ToInt32(((r32)result.absTileX / (r32)tileSideInPixels));
+    result.absTileY = CeilReal32ToInt32(((r32)result.absTileY / (r32)tileSideInPixels));
+//    result.absTileY /= tileSideInPixels;
     result = RecanonicalizePosition(tileMap, result);
     result.absTileY += (gameState->cameraChunkY - 18);
     return(result);

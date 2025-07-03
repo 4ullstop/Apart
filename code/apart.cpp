@@ -293,6 +293,34 @@ FillSinWaveSoundBuffer(game_sound_info* gameSoundInfo)
     }
 }
 
+internal loaded_bitmap
+GetBitmapForCursor(game_state* gameState)
+{
+    e_tile_texture tileTexture = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue.tileTexture;
+    
+    loaded_bitmap result = {};
+    switch (tileTexture)
+    {
+    case e_tile_texture::blueBackground:
+    {
+	result = gameState->backgroundBitmaps[3].tileBitmap;
+    } break;
+    case e_tile_texture::blueBrick:
+    {
+	result = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileBitmap;
+    } break;
+    case e_tile_texture::goal:
+    {
+	result = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileBitmap;
+    } break;
+    default:
+    {
+	result = gameState->mouseCursorSaved;
+    } break;
+    }
+
+    return(result);
+}
 
 extern "C" GAME_GET_SOUND_DATA(GameGetSoundData)
 {
@@ -324,17 +352,27 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	background_bitmaps* background;
 	background = gameState->backgroundBitmaps;
-	background->blueTile = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_background.bmp");
+	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_background.bmp");
 	background->tileValue.collisionEnabled = true;
 	background->tileValue.tileTexture = e_tile_texture::blueBackground;
 	background++;
 
-	background->blueTile = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_brick_wall.bmp");
+	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_brick_wall.bmp");
 	background->tileValue.collisionEnabled = false;
 	background->tileValue.tileTexture = e_tile_texture::blueBrick;
+	background++;
 
+	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/goal_wall.bmp");
+	background->tileValue.collisionEnabled = false;
+	background->tileValue.tileTexture = e_tile_texture::goal;
+	background++;
+
+
+	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_background_cursor.bmp");
+	background->tileValue.collisionEnabled = false;
+	background->tileValue.tileTexture = e_tile_texture::blueBackgroundCursor;
+	
 	gameState->currSelectedTileIndex = 1;
-
 	
 	player_bitmap* player;
 	player = gameState->playerBitmaps;
@@ -397,8 +435,9 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	gameState->debugMode = false;
 
 
-	gameState->mouseCursorBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/mouse_cursor.bmp");
 
+	gameState->mouseCursorSaved = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/mouse_cursor.bmp");
+	gameState->mouseCursorBitmap = gameState->mouseCursorSaved;
 
 	input_timer inputTimer = {};
 	inputTimer.maxHeldTime = 6.0f;
@@ -642,16 +681,26 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
 		    }
 
-		    if (controller->actionLeft.endedDown)
+		    if ((controller->actionLeft.endedDown) && !(gameState->inputPreviousFrame))
 		    {
 			gameState->currSelectedTileIndex++;
 			if (gameState->currSelectedTileIndex > ArrayCount(gameState->backgroundBitmaps) - 1) gameState->currSelectedTileIndex = 0;
+			gameState->inputPreviousFrame = true;
+		    }
+		    else if (controller->actionLeft.wasDown)
+		    {
+			gameState->inputPreviousFrame = false;
 		    }
 
-		    if (controller->actionRight.endedDown)
+		    if ((controller->actionRight.endedDown) && !(gameState->inputPreviousFrame))
 		    {
 			gameState->currSelectedTileIndex--;
 			if (gameState->currSelectedTileIndex < 0) gameState->currSelectedTileIndex = 0;
+			gameState->inputPreviousFrame = true;
+		    }
+		    else if (controller->actionRight.wasDown)
+		    {
+			gameState->inputPreviousFrame = false;
 		    }
 		}
 		else
@@ -835,7 +884,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			screenCenterY + metersToPixels * gameState->cameraP.offset.y -
 			((r32)relRow) * tileSideInPixels};		    
 		    background_bitmaps* background = &gameState->backgroundBitmaps[0];
-		    DrawBackgroundTile(buffer, &background->blueTile, min, max);
+		    DrawBackgroundTile(buffer, &background->tileBitmap, min, max);
 		}
 		else
 		{
@@ -858,7 +907,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		screenCenterY + metersToPixels * gameState->cameraP.offset.y -
 		((r32)relRow) * tileSideInPixels};		    
 	    background_bitmaps* background = &gameState->backgroundBitmaps[tileId.tileTexture];
-	    DrawBackgroundTile(buffer, &background->blueTile, min, max);
+	    DrawBackgroundTile(buffer, &background->tileBitmap, min, max);
 #endif	    
 	}
     }
@@ -887,7 +936,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    player_bitmap* player = gameState->currentPlayerBitmap;
 	    DrawBitmap(buffer, &player->bitmap, playerGroundPointX, playerGroundPointY, player->alignX, player->alignY);
 
-#if 1
+
 
 	    {
 		if (ball->isActive)
@@ -898,7 +947,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    DrawBitmap(buffer, &ball->entityBitmap, ballGroundPointX, ballGroundPointY, 0, 0);		    
 		}
 	    }
-#endif	    
+
 	}
     }
 
@@ -906,11 +955,14 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     if (gameState->debugMode)
     {
 	DrawBitmap(buffer, &gameState->debugIndicatorBitmap, 0, 0, 0, 0);
+	gameState->mouseCursorBitmap = GetBitmapForCursor(gameState);
     }
     else
     {
-	DrawBitmap(buffer, &gameState->backgroundBitmaps[0].blueTile, 0, 0, 0, 0);
+	DrawBitmap(buffer, &gameState->backgroundBitmaps[0].tileBitmap, 0, 0, 0, 0);
+	gameState->mouseCursorBitmap = gameState->mouseCursorSaved;
     }
 
     DrawBitmap(buffer, &gameState->mouseCursorBitmap, (r32)input->mouseX, (r32)input->mouseY, 20, 20);
 }
+

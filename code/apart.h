@@ -273,7 +273,7 @@ struct background_bitmaps
     i32 alignX;
     i32 alignY;
 
-    loaded_bitmap blueTile;
+    loaded_bitmap tileBitmap;
     tile_value tileValue;   
 };
 
@@ -310,7 +310,7 @@ struct game_state
     u32 entityCount;
     entity entities[256];
 
-    background_bitmaps backgroundBitmaps[2];
+    background_bitmaps backgroundBitmaps[4];
     player_bitmap playerBitmaps[2];
 
     
@@ -325,7 +325,8 @@ struct game_state
     loaded_bitmap debugIndicatorBitmap;
 
     loaded_bitmap mouseCursorBitmap;
-
+    loaded_bitmap mouseCursorSaved;
+    
     bool32 inputPreviousFrame;
 
     input_timer* inputTimer;
