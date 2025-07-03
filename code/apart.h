@@ -141,6 +141,11 @@ struct game_controller_input
 
     bool32 scrollUpDown;
     bool32 scrollDownDown;    
+
+
+    bool32 inputPreviousFrame;
+    
+    r32 heldTime;
     
     union
     {
@@ -274,6 +279,13 @@ struct background_bitmaps
 
 #include "entity.h"
 
+
+struct input_timer
+{
+    r32 timeHeld;
+    r32 maxHeldTime;
+};
+
 struct game_state
 {
     i32 xOffset;
@@ -313,6 +325,10 @@ struct game_state
     loaded_bitmap debugIndicatorBitmap;
 
     loaded_bitmap mouseCursorBitmap;
+
+    bool32 inputPreviousFrame;
+
+    input_timer* inputTimer;
 };
 
 

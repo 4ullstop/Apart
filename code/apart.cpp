@@ -398,6 +398,11 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 
 	gameState->mouseCursorBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/mouse_cursor.bmp");
+
+
+	input_timer inputTimer = {};
+	inputTimer.maxHeldTime = 6.0f;
+	gameState->inputTimer = &inputTimer;
 	
 	// the number of tiles per chunk
 	u32 tilesPerWidth = 33;
@@ -678,27 +683,64 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		*/
 		bool32 movementDetected = false;
 		bool32 jumpInputDetected = false;
-		if (controller->moveLeft.endedDown)
+
+		if (gameState->inputPreviousFrame)
+		{
+		    gameState->inputTimer->timeHeld++;
+
+		    if (gameState->inputTimer->timeHeld >= gameState->inputTimer->maxHeldTime)
+		    {
+			gameState->inputPreviousFrame = false;
+			gameState->inputTimer->timeHeld = 0.0f;
+		    }
+		}
+		
+		if ((controller->moveLeft.endedDown) && !(gameState->inputPreviousFrame))
 		{
 		    ddP.x = -1.0f;
 		    movementDetected = true;
 		    moveAnimDetected = true;
 		    gameState->cameraFollowingEntity = true;
+		    gameState->inputPreviousFrame = true;
+
 		}
-		if (controller->moveRight.endedDown)
+		else if (controller->moveLeft.wasDown)
+		{
+		    gameState->inputPreviousFrame = false;
+		}
+
+		if ((controller->moveRight.endedDown) && !(gameState->inputPreviousFrame))
 		{
 		    ddP.x = 1.0f;
 		    movementDetected = true;
 		    moveAnimDetected = true;			
-		    gameState->cameraFollowingEntity = true;			
+		    gameState->cameraFollowingEntity = true;
+		    gameState->inputPreviousFrame = true;		    
 		}
-		if (controller->moveUp.endedDown)
+		else if (controller->moveRight.wasDown)
+		{
+		    gameState->inputPreviousFrame = false;		    
+		}
+		
+
+		if ((controller->moveUp.endedDown) && !(gameState->inputPreviousFrame))
 		{
 		    ddP.y = 1.0f;
+		    gameState->inputPreviousFrame = true;		    
 		}
-		if (controller->moveDown.endedDown)
+		else if (controller->moveUp.wasDown)
+		{
+		    gameState->inputPreviousFrame = false;
+		}
+		
+		if ((controller->moveDown.endedDown) && !(gameState->inputPreviousFrame))
 		{
 		    ddP.y = -1.0f;
+		    gameState->inputPreviousFrame = true;		    
+		}
+		else if (controller->moveDown.wasDown)
+		{
+		    gameState->inputPreviousFrame = false;		    
 		}
 
 		if (controller->actionDown.endedDown)
@@ -706,9 +748,15 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 		}
 
+		if (!(gameState->inputPreviousFrame))
+		{
+		    gameState->inputTimer->timeHeld = 0.0f;
+		}
+		
 		bool32 jumpButtonDetected = false;
 
-		MovePlayer(gameState, controllingEntity, input->dTime, ddP);
+//		MovePlayer(gameState, controllingEntity, input->dTime, ddP);
+		MovePlayer(ddP, controllingEntity, gameState);
 	    }
 	}
 	else

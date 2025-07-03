@@ -1,6 +1,5 @@
 #include "entity.h"
 
-
 inline entity*
 GetEntity(game_state* gameState, u32 index)
 {
@@ -71,8 +70,6 @@ TestWall(r32 wallX, r32 relX, r32 relY, r32 playerDeltaX, r32 playerDeltaY, r32*
     return(hit);
 }
 
-
-
 internal test_tile_dimensions
 GetTestTileDimensions(tile_map_position oldP, tile_map_position newP, tile_map* tileMap, entity* entity)
 {
@@ -130,7 +127,6 @@ EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileM
 
     
     u32 absTileZ = entity->p.absTileZ;
-    
 
     for (u32 absTileY = dim.minTileY; absTileY <= dim.maxTileY; ++absTileY)
     {
@@ -199,16 +195,51 @@ MoveBall(game_state* gameState, ball_entity* entity, r32 dt, v2 ddP)
 	entity->p = Offset(tileMap, entity->p, tMin*ballInfo.entityDelta);
 	vReflection = ReflectionVector(entity->dP, wallNormal);
 	
-//	entity->dP = entity->dP - 1*Inner(entity->dP, wallNormal)*wallNormal;
 	entity->dP = vReflection;
 
 	ballInfo.entityDelta = ballInfo.entityDelta - 1 * Inner(ballInfo.entityDelta, wallNormal)*wallNormal;
-//	ballInfo.entityDelta = ballInfo.entityDelta - 1 * vReflection;
 	tRemaining -= tMin;
     }
     entity->ddP = entity->dP;
 }    
 
+//NOTE: At some point it might be best to change the ddP value to an int just bc the precision is not needed and
+//could be wasting space which is uneeded
+
+internal void
+MovePlayer(v2 ddP, entity* entity, game_state* gameState)
+{
+    tile_map* tileMap = gameState->world->tileMap;
+    //Use tile_map_position which has absTile... for locations
+
+    tile_map_position projectedLocation = entity->p;    
+
+    projectedLocation.absTileZ = 0;
+    if (ddP.x == 1.0f)
+    {
+	projectedLocation.absTileX++;
+    }
+    else if (ddP.x == -1.0f)
+    {
+	projectedLocation.absTileX--;
+    }
+    else if (ddP.y == 1.0f)
+    {
+	projectedLocation.absTileY++;
+    }
+    else if (ddP.y == -1.0f)
+    {
+	projectedLocation.absTileY--;
+    }
+
+    tile_map_position testTileP = CenteredTilePoint(projectedLocation.absTileX, projectedLocation.absTileY, projectedLocation.absTileZ);
+    tile_value tileValue = GetTileValue(tileMap, testTileP);
+
+    if (IsTileValueEmpty(tileValue))
+    {
+	entity->p = projectedLocation;
+    }
+}
 
 ///
 internal void

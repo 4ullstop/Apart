@@ -34,7 +34,6 @@ struct player_anim_bitmap
     i32 numOfSprites;
 };
 
-
 struct entity
 {
     bool32 exists;
