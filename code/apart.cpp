@@ -440,7 +440,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	gameState->mouseCursorBitmap = gameState->mouseCursorSaved;
 
 	input_timer inputTimer = {};
-	inputTimer.maxHeldTime = 6.0f;
+	inputTimer.maxHeldTime = 10.0f;
 	gameState->inputTimer = &inputTimer;
 	
 	// the number of tiles per chunk
@@ -581,7 +581,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     i32 tileSideInPixels = 30;
     r32 metersToPixels = tileSideInPixels / tileMap->tileSideInMeters;
     tileMap->metersToPixels = metersToPixels;
-    
+
+    gameState->inputTimer->maxHeldTime = 1000.0f * input->dTime;
     
     for (int controllerIndex = 0; controllerIndex < ArrayCount(input->controllers); ++controllerIndex)
     {
@@ -721,6 +722,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			    v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
 			    //normalize this value, set it to the ddP of the ball
 			    ball->ddP = mouseDiffNormalized;
+			    ball->dP = ball->ddP;
 			}			
 		    }
 		}
@@ -742,6 +744,22 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			gameState->inputPreviousFrame = false;
 			gameState->inputTimer->timeHeld = 0.0f;
 		    }
+		}
+		
+		if ((controller->leftShoulder.endedDown) && !(gameState->inputPreviousFrame))
+		{
+		    //Reset the ball
+		    if (ball->isActive)
+		    {
+			ball->isActive = false;
+			ball->ddP = {};
+			ball->p = controllingEntity->p;
+		    }
+		    gameState->inputPreviousFrame = true;		    
+		}
+		else if (controller->leftShoulder.wasDown)
+		{
+		    gameState->inputPreviousFrame = false;
 		}
 		
 		if ((controller->moveLeft.endedDown) && !(gameState->inputPreviousFrame))
