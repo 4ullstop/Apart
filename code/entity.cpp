@@ -70,6 +70,39 @@ TestWall(r32 wallX, r32 relX, r32 relY, r32 playerDeltaX, r32 playerDeltaY, r32*
     return(hit);
 }
 
+internal void
+GetWallNormal(tile_map* tileMap, entity* entity, r32* tMin, entity_movement_calculations* entityInfo, tile_map_position testTileP, v2* wallNormal)
+{
+    r32 diameterW = tileMap->tileSideInMeters + entity->width;
+    r32 diameterH = tileMap->tileSideInMeters + entity->height;
+    v2 minCorner = -0.5f*v2{diameterW, diameterH};
+    v2 maxCorner = 0.5f*v2{diameterW, diameterH};
+
+    tile_map_difference relOldPlayerP = Subtract(tileMap, &entity->p, &testTileP);
+    v2 rel = relOldPlayerP.dXY;
+    v2 result = {};
+    if (TestWall(minCorner.x, rel.x, rel.y, entityInfo->entityDelta.x, entityInfo->entityDelta.y,
+		 tMin, minCorner.y, maxCorner.y))
+    {
+	*wallNormal = v2{-1, 0};
+    }
+    if (TestWall(maxCorner.x, rel.x, rel.y, entityInfo->entityDelta.x, entityInfo->entityDelta.y,
+		 tMin, minCorner.y, maxCorner.y))
+    {
+	*wallNormal = v2{1, 0};
+    }
+    if (TestWall(minCorner.y, rel.y, rel.x, entityInfo->entityDelta.y, entityInfo->entityDelta.x,
+		 tMin, minCorner.x, maxCorner.x))
+    {
+	*wallNormal = v2{0, -1};
+    }
+    if (TestWall(maxCorner.y, rel.y, rel.x, entityInfo->entityDelta.y, entityInfo->entityDelta.x,
+		 tMin, minCorner.x, maxCorner.x))
+    {
+	*wallNormal = v2{0, 1};
+    }
+}
+
 internal test_tile_dimensions
 GetTestTileDimensions(tile_map_position oldP, tile_map_position newP, tile_map* tileMap, entity* entity)
 {
@@ -135,37 +168,49 @@ EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileM
 	    tile_map_position testTileP = CenteredTilePoint(absTileX, absTileY, absTileZ);
 	    tile_value tileValue = GetTileValue(tileMap, testTileP);
 
-	    if (!IsTileValueEmpty(tileValue))
+	    if (IsTileValueEmpty(tileValue) != e_collision_type::none)
 	    {
-		r32 diameterW = tileMap->tileSideInMeters + entity->width;
-		r32 diameterH = tileMap->tileSideInMeters + entity->height;
-		v2 minCorner = -0.5f*v2{diameterW, diameterH};
-		v2 maxCorner = 0.5f*v2{diameterW, diameterH};
+		switch (tileValue.collisionType)
+		{
+		case e_collision_type::block:
+		{
+		    GetWallNormal(tileMap, entity, tMin, entityInfo, testTileP, wallNormal);
+		} break;
+		case e_collision_type::response:
+		{
+		    if (tileValue.collisionResponse != e_collision_response::noResponse)
+		    {
+			switch (tileValue.collisionResponse)
+			{
+			case e_collision_response::goalResponse:
+			{
+			    if ((ball_entity*)entity)
+			    {
+				//Player hit the goal, now what
+				Assert("Congrats ball was hit properly");
+				//Avoid the blocking that happens automatically during the detection
+			    }
+			} break;
+			case e_collision_response::noResponse:
+			{
+			    Assert("Should not be hitting this");
+			} break;
+			}
+		    }
+		} break;
+		case e_collision_type::none:
+		{
+		    Assert("Uhhh");
+		} break;
+		default:
+		{
+		    Assert("Defaulted here");
+		} break;
+		}
+	    }
+	    else
+	    {
 
-		tile_map_difference relOldPlayerP = Subtract(tileMap, &entity->p, &testTileP);
-		v2 rel = relOldPlayerP.dXY;
-		    
-		if (TestWall(minCorner.x, rel.x, rel.y, entityInfo->entityDelta.x, entityInfo->entityDelta.y,
-			     tMin, minCorner.y, maxCorner.y))
-		{
-		    *wallNormal = v2{-1, 0};
-		}
-		if (TestWall(maxCorner.x, rel.x, rel.y, entityInfo->entityDelta.x, entityInfo->entityDelta.y,
-			     tMin, minCorner.y, maxCorner.y))
-		{
-		    *wallNormal = v2{1, 0};
-		}
-		if (TestWall(minCorner.y, rel.y, rel.x, entityInfo->entityDelta.y, entityInfo->entityDelta.x,
-			     tMin, minCorner.x, maxCorner.x))
-		{
-		    *wallNormal = v2{0, -1};
-		}
-		if (TestWall(maxCorner.y, rel.y, rel.x, entityInfo->entityDelta.y, entityInfo->entityDelta.x,
-			     tMin, minCorner.x, maxCorner.x))
-		{
-		    *wallNormal = v2{0, 1};
-		    isFloor = true;
-		}		    
 	    }
 	}
     }    
@@ -235,7 +280,7 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState)
     tile_map_position testTileP = CenteredTilePoint(projectedLocation.absTileX, projectedLocation.absTileY, projectedLocation.absTileZ);
     tile_value tileValue = GetTileValue(tileMap, testTileP);
 
-    if (IsTileValueEmpty(tileValue))
+    if (!IsTileValueEmpty(tileValue))
     {
 	entity->p = projectedLocation;
     }

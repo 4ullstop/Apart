@@ -43,8 +43,10 @@ enum e_tile_texture : u8
 #pragma pack(push, 1)
 struct tile_value
 {
-    bool32 collisionEnabled;
+    e_collision_type collisionType;
     e_tile_texture tileTexture;
+
+    e_collision_response collisionResponse;
 };
 #pragma pack(pop)
 

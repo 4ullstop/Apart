@@ -353,24 +353,28 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	background_bitmaps* background;
 	background = gameState->backgroundBitmaps;
 	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_background.bmp");
-	background->tileValue.collisionEnabled = true;
+	background->tileValue.collisionType = e_collision_type::none;
 	background->tileValue.tileTexture = e_tile_texture::blueBackground;
+	background->tileValue.collisionResponse = e_collision_response::noResponse;
 	background++;
 
 	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_brick_wall.bmp");
-	background->tileValue.collisionEnabled = false;
+	background->tileValue.collisionType = e_collision_type::block;
 	background->tileValue.tileTexture = e_tile_texture::blueBrick;
+	background->tileValue.collisionResponse = e_collision_response::noResponse;	
 	background++;
 
 	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/goal_wall.bmp");
-	background->tileValue.collisionEnabled = false;
+	background->tileValue.collisionType = e_collision_type::response;
+	background->tileValue.collisionResponse = e_collision_response::goalResponse;	
 	background->tileValue.tileTexture = e_tile_texture::goal;
 	background++;
 
 
 	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/blue_background_cursor.bmp");
-	background->tileValue.collisionEnabled = false;
+	background->tileValue.collisionType = e_collision_type::none;
 	background->tileValue.tileTexture = e_tile_texture::blueBackgroundCursor;
+	background->tileValue.collisionResponse = e_collision_response::noResponse;	
 	
 	gameState->currSelectedTileIndex = 1;
 	
@@ -470,7 +474,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		for (u32 tileX = 0; tileX < tilesPerWidth; ++tileX)
 		{
 		    tile_value tileValue = {};
-		    tileValue.collisionEnabled = false;
+		    tileValue.collisionType = e_collision_type::none;
 		    tileValue.tileTexture = e_tile_texture::blueBackground;
 		    u32 absTileX = screenX * tilesPerWidth + tileX;
 		    u32 absTileY = screenY * tilesPerHeight + tileY;
@@ -668,16 +672,25 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    if (input->mouseButtons[0].endedDown)
 		    {
 			tile_value tile = {};
-			tile.collisionEnabled = true;
+#if 0
+
+			tile.collisionType = e_collision_type::block;
 			tile.tileTexture = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue.tileTexture;
+#else
+			tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
+#endif			
 			SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
 		    }
 
 		    if (input->mouseButtons[1].endedDown)
 		    {
 			tile_value tile = {};
-			tile.collisionEnabled = false;
+#if 0			
+			tile.collisionType = e_collision_type::none;
 			tile.tileTexture = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue.tileTexture;
+#else
+			tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
+#endif			
 
 			SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
 		    }
@@ -723,7 +736,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			    //normalize this value, set it to the ddP of the ball
 			    ball->ddP = mouseDiffNormalized;
 			    ball->dP = ball->ddP;
-			}			
+			}
 		    }
 		}
 

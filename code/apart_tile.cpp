@@ -116,7 +116,7 @@ SetTileValue(memory_arena* arena, tile_map* tileMap,
 	u32 tileCount = tileMap->chunkDim * tileMap->chunkDim;
 	tileChunk->tiles = PushArray(arena, tileCount, tile_value);
 	tile_value blankTile = {};
-	blankTile.collisionEnabled = false;
+	blankTile.collisionType = e_collision_type::block;
 	blankTile.tileTexture = e_tile_texture::blueBackground;
 	for (u32 tileIndex = 0; tileIndex < tileCount; ++tileIndex)
 	{
@@ -185,12 +185,11 @@ CenteredTilePoint(u32 absTileX, u32 absTileY, u32 absTileZ)
     return(result);
 }
 
-internal bool32
+internal e_collision_type
 IsTileValueEmpty(tile_value tileValue)
 {
-    bool32 empty = !tileValue.collisionEnabled;
-
-    return(empty);
+    e_collision_type result = tileValue.collisionType;
+    return(result);
 }
 
 internal tile_map_position

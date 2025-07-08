@@ -106,6 +106,19 @@ typedef DEBUG_PLATFORM_WRITE_TO_FILE(debug_platform_write_to_file);
 #define AUDIO_BUFFER_SIZE_SAMPLES  SAMPLES_PER_CYCLE * AUDIO_BUFFER_SIZE_CYCLES
 #define AUDIO_BUFFER_SIZE_BYTES AUDIO_BUFFER_SIZE_SAMPLES * BITS_PER_SAMPLE / 8
 
+enum e_collision_type : u8
+{
+    none = 0,
+    block = 1,
+    response = 2
+};
+
+enum e_collision_response : u8
+{
+    noResponse,
+    goalResponse
+};
+
 #include "apart_intrinsics.h"
 #include "apart_math.h"
 #include "apart_tile.h"
@@ -268,16 +281,20 @@ struct loaded_bitmap
     u32* pixels;
 };
 
+#include "entity.h"
+
 struct background_bitmaps
 {
     i32 alignX;
     i32 alignY;
 
     loaded_bitmap tileBitmap;
-    tile_value tileValue;   
-};
+    tile_value tileValue;
 
-#include "entity.h"
+    //We can have walls that do and don't have entitydata so then we don't take up space on the tiles
+    //we don't want to have entity properties
+    entity* entityData;
+};
 
 
 struct input_timer
