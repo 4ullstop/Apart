@@ -174,6 +174,7 @@ EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileM
 		{
 		case e_collision_type::block:
 		{
+		    //Didn't actually end up needing to compact this but oh well
 		    GetWallNormal(tileMap, entity, tMin, entityInfo, testTileP, wallNormal);
 		} break;
 		case e_collision_type::response:
@@ -187,8 +188,12 @@ EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileM
 			    if ((ball_entity*)entity)
 			    {
 				//Player hit the goal, now what
-				Assert("Congrats ball was hit properly");
-				//Avoid the blocking that happens automatically during the detection
+
+				if ((testTileP.absTileX == entity->p.absTileX) &&
+				    (testTileP.absTileY == entity->p.absTileY))
+				{
+				    Assert("Congrats ball was hit properly");
+				}
 			    }
 			} break;
 			case e_collision_response::noResponse:
