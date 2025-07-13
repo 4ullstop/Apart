@@ -17,6 +17,7 @@ struct v2
 
     inline v2 &operator+=(v2 a);
 
+    inline v2 &operator-=(v2 a);
 };
 
 inline v2
@@ -93,6 +94,14 @@ operator-(v2 a, v2 b)
     return(result);
 }
 
+inline v2 &v2::
+operator-=(v2 a)
+{
+    *this = *this - a;
+
+    return(*this);
+}
+
 inline r32
 Square(r32 a)
 {
@@ -112,6 +121,14 @@ internal r32
 LengthSq(v2 a)
 {
     r32 result = Inner(a, a);
+
+    return(result);
+}
+
+internal r32
+Length(v2 a)
+{
+    r32 result = (r32)sqrt(LengthSq(a));
 
     return(result);
 }

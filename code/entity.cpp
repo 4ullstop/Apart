@@ -34,6 +34,7 @@ InitializePlayer(game_state* gameState, u32 entityIndex)
 {
     entity* entity = GetEntity(gameState, entityIndex);
     entity->exists = true;
+    entity->floatingMovement = false;
     entity->p.absTileX = 17/2;
     entity->p.absTileY = 3;
     entity->p.offset.x = 0.0f;
@@ -134,10 +135,10 @@ CalculateNewP(tile_map* tileMap, v2 ddP, entity* entity, r32 dt)
 	ddP *= 1.0f / SquareRoot(ddPLength);
     }
 
-    r32 playerSpeed = 90.0f;
+    r32 playerSpeed = 1500.0f;
     ddP *= playerSpeed;
     
-    ddP += -7.0*entity->dP;
+    ddP += -1.0f*entity->dP;
     //ddP += -35.0f*entity->dP;
 
     result.oldP = entity->p;
@@ -146,6 +147,7 @@ CalculateNewP(tile_map* tileMap, v2 ddP, entity* entity, r32 dt)
 
     r32 gravity = 0.0f;
     entity->dP = ddP * dt + entity->dP;
+
 
     result.newP = Offset(tileMap, result.oldP, result.entityDelta);
     return(result);
@@ -222,7 +224,7 @@ EntityCollisionRoutine(test_tile_dimensions dim, entity* entity, tile_map* tileM
 }
 
 internal void
-MoveBall(game_state* gameState, ball_entity* entity, r32 dt, v2 ddP)
+MoveBall(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 {
     tile_map* tileMap = gameState->world->tileMap;
     entity_movement_calculations ballInfo = CalculateNewP(tileMap, ddP, entity, dt);
@@ -250,11 +252,7 @@ MoveBall(game_state* gameState, ball_entity* entity, r32 dt, v2 ddP)
 	ballInfo.entityDelta = ballInfo.entityDelta - 1 * Inner(ballInfo.entityDelta, wallNormal)*wallNormal;
 	tRemaining -= tMin;
     }
-    entity->ddP = entity->dP;
 }    
-
-//NOTE: At some point it might be best to change the ddP value to an int just bc the precision is not needed and
-//could be wasting space which is uneeded
 
 internal void
 MovePlayer(v2 ddP, entity* entity, game_state* gameState)

@@ -336,7 +336,7 @@ struct game_state
     player_bitmap playerAnimations[4];
     player_bitmap* currentPlayerBitmap;
 
-    ball_entity* ballEntity;
+//    ball_entity* ballEntity;
 
     bool32 debugMode;
     loaded_bitmap debugIndicatorBitmap;

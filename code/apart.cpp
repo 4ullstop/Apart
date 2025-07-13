@@ -380,7 +380,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	
 	player_bitmap* player;
 	player = gameState->playerBitmaps;
-	player->bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/player_face_forward.bmp");
+	player->bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
 	player->alignX = 15;
 	player->alignY = 23;
 
@@ -396,7 +396,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			(u8*)memory->permanentStorage + sizeof(game_state));
 
 
-	gameState->playerAnimations[0].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/player_idle.bmp");
+	gameState->playerAnimations[0].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
 	gameState->playerAnimations[0].alignX = 15;
 	gameState->playerAnimations[0].alignY = 23;
 
@@ -422,6 +422,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	tileMap->tileSideInMeters = 1.4f;
 
+#if 0
 	//Init player ball
 	{
 	    ball_entity ball = {};
@@ -434,7 +435,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    ball.entityBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
 	    gameState->ballEntity = &ball;
 	}
-
+#endif
 	gameState->debugIndicatorBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/debug_indicator.bmp");
 	gameState->debugMode = false;
 
@@ -578,7 +579,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     world* world = gameState->world;
     tile_map* tileMap = world->tileMap;
-    ball_entity* ball = gameState->ballEntity;
+//    ball_entity* ball = gameState->ballEntity;
 
 
     //this was 30
@@ -721,6 +722,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		{
 		    if (input->mouseButtons[0].endedDown)
 		    {
+#if 0
 			if (!ball->isActive)
 			{
 			    //Spawn/update the ball here
@@ -736,6 +738,19 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			    //normalize this value, set it to the ddP of the ball
 			    ball->ddP = mouseDiffNormalized;
 			    ball->dP = ball->ddP;
+			}
+#endif
+			if (!controllingEntity->floatingMovement)
+			{
+			    controllingEntity->floatingMovement = true;
+			    tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
+
+			    tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &controllingEntity->p);
+
+			    v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
+
+			    controllingEntity->ddP = mouseDiffNormalized;
+			    controllingEntity->dP = controllingEntity->ddP;			    
 			}
 		    }
 		}
@@ -762,13 +777,16 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		if ((controller->leftShoulder.endedDown) && !(gameState->inputPreviousFrame))
 		{
 		    //Reset the ball
+#if 0
 		    if (ball->isActive)
 		    {
 			ball->isActive = false;
 			ball->ddP = {};
 			ball->p = controllingEntity->p;
 		    }
-		    gameState->inputPreviousFrame = true;		    
+#endif		    
+		    gameState->inputPreviousFrame = true;
+		    
 		}
 		else if (controller->leftShoulder.wasDown)
 		{
@@ -835,8 +853,19 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		
 		bool32 jumpButtonDetected = false;
 
-//		MovePlayer(gameState, controllingEntity, input->dTime, ddP);
-		MovePlayer(ddP, controllingEntity, gameState);
+
+		if (controllingEntity->floatingMovement)
+		{
+		    MoveBall(gameState, controllingEntity, input->dTime, controllingEntity->ddP);
+		    if ((controllingEntity->ddP.x != 0.0f) || (controllingEntity->ddP.y != 0.0f))
+		    {
+			controllingEntity->ddP = {};
+		    }
+		}
+		else
+		{
+		    MovePlayer(ddP, controllingEntity, gameState);
+		}
 	    }
 	}
 	else
@@ -851,11 +880,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	
     }
 
+#if 0
     if (ball->isActive)
     {
 	MoveBall(gameState, ball, input->dTime, ball->ddP);
     }
-
+#endif
     
     
     r32 upperLeftX = -30;
@@ -970,13 +1000,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 
 	    {
-		if (ball->isActive)
-		{
-		    tile_map_difference ballDiff = Subtract(tileMap, &ball->p, &gameState->cameraP);
-		    r32 ballGroundPointX = screenCenterX + metersToPixels * ballDiff.dXY.x;
-		    r32 ballGroundPointY = screenCenterY - metersToPixels * ballDiff.dXY.y;
-		    DrawBitmap(buffer, &ball->entityBitmap, ballGroundPointX, ballGroundPointY, 0, 0);		    
-		}
+#if 0
+		tile_map_difference ballDiff = Subtract(tileMap, &ball->p, &gameState->cameraP);
+		r32 ballGroundPointX = screenCenterX + metersToPixels * ballDiff.dXY.x;
+		r32 ballGroundPointY = screenCenterY - metersToPixels * ballDiff.dXY.y;
+		DrawBitmap(buffer, &ball->entityBitmap, ballGroundPointX, ballGroundPointY, 0, 0);
+#endif		
 	    }
 
 	}

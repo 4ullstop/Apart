@@ -51,6 +51,10 @@ struct entity
     loaded_bitmap entityBitmap;
 
     r32 entitySpeed;
+
+    v2 ddP;
+
+    bool32 floatingMovement;
 };
 
 inline bool32 IsEntityInAir(entity* entity)
@@ -68,9 +72,7 @@ inline bool32 EntityAirCheckForCollision(entity* entity)
 struct ball_entity : public entity
 {
     loaded_bitmap ballBitmap;
-    entity* ballEntity;
     bool32 isActive;
-    v2 ddP;
 };
 
 struct entity_movement_calculations
