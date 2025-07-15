@@ -670,30 +670,24 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 		if (gameState->debugMode)
 		{
-		    if (input->mouseButtons[0].endedDown)
+		    if ((input->mouseButtons[0].endedDown))
 		    {
 			tile_value tile = {};
-#if 0
-
-			tile.collisionType = e_collision_type::block;
-			tile.tileTexture = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue.tileTexture;
-#else
 			tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
-#endif			
+
 			SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
+
 		    }
 
-		    if (input->mouseButtons[1].endedDown)
+		    if ((input->mouseButtons[1].endedDown))
 		    {
 			tile_value tile = {};
-#if 0			
-			tile.collisionType = e_collision_type::none;
-			tile.tileTexture = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue.tileTexture;
-#else
+
 			tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
-#endif			
 
 			SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
+
+
 		    }
 
 		    if ((controller->actionLeft.endedDown) && !(gameState->inputPreviousFrame))
@@ -720,26 +714,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		}
 		else
 		{
-		    if (input->mouseButtons[0].endedDown)
+		    if ((input->mouseButtons[0].endedDown) && !(gameState->inputPreviousFrame))
 		    {
-#if 0
-			if (!ball->isActive)
-			{
-			    //Spawn/update the ball here
-			    ball->isActive = true;
-			    ball->p = controllingEntity->p;
-			    //You already did most of the grunt work for this already!
-			    //get mouse position, you're gonna have to get the tile location or something
-			    tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
-
-			    tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &controllingEntity->p);
-			    //get the difference between the player and the mouse cursor
-			    v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
-			    //normalize this value, set it to the ddP of the ball
-			    ball->ddP = mouseDiffNormalized;
-			    ball->dP = ball->ddP;
-			}
-#endif
 			if (!controllingEntity->floatingMovement)
 			{
 			    controllingEntity->floatingMovement = true;
@@ -750,8 +726,14 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			    v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
 
 			    controllingEntity->ddP = mouseDiffNormalized;
-			    controllingEntity->dP = controllingEntity->ddP;			    
+			    controllingEntity->dP = controllingEntity->ddP;
+
+			    gameState->inputPreviousFrame = true;
 			}
+		    }
+		    else if (input->mouseButtons[0].wasDown)
+		    {
+			gameState->inputPreviousFrame = false;
 		    }
 		}
 
@@ -777,14 +759,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		if ((controller->leftShoulder.endedDown) && !(gameState->inputPreviousFrame))
 		{
 		    //Reset the ball
-#if 0
-		    if (ball->isActive)
-		    {
-			ball->isActive = false;
-			ball->ddP = {};
-			ball->p = controllingEntity->p;
-		    }
-#endif		    
 		    gameState->inputPreviousFrame = true;
 		    
 		}
@@ -806,7 +780,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		{
 		    gameState->inputPreviousFrame = false;
 		}
-
+#if 0
 		if ((controller->moveRight.endedDown) && !(gameState->inputPreviousFrame))
 		{
 		    ddP.x = 1.0f;
@@ -819,7 +793,16 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		{
 		    gameState->inputPreviousFrame = false;		    
 		}
-		
+#else
+		if (controller->moveRight.started)
+		{
+		    ddP.x = 1.0f;
+		    movementDetected = true;
+		    moveAnimDetected = true;			
+		    gameState->cameraFollowingEntity = true;
+		    gameState->inputPreviousFrame = true;		    
+		}		
+#endif		
 
 		if ((controller->moveUp.endedDown) && !(gameState->inputPreviousFrame))
 		{
@@ -861,6 +844,11 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    {
 			controllingEntity->ddP = {};
 		    }
+		    r32 exitFloatingVelocity = 0.3f;
+		    if ((controllingEntity->dP.x <= exitFloatingVelocity) && (controllingEntity->dP.y <= exitFloatingVelocity))
+		    {
+			controllingEntity->floatingMovement = false;
+		    }
 		}
 		else
 		{
@@ -879,13 +867,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	}
 	
     }
-
-#if 0
-    if (ball->isActive)
-    {
-	MoveBall(gameState, ball, input->dTime, ball->ddP);
-    }
-#endif
     
     
     r32 upperLeftX = -30;
@@ -996,18 +977,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	    player_bitmap* player = gameState->currentPlayerBitmap;
 	    DrawBitmap(buffer, &player->bitmap, playerGroundPointX, playerGroundPointY, player->alignX, player->alignY);
-
-
-
-	    {
-#if 0
-		tile_map_difference ballDiff = Subtract(tileMap, &ball->p, &gameState->cameraP);
-		r32 ballGroundPointX = screenCenterX + metersToPixels * ballDiff.dXY.x;
-		r32 ballGroundPointY = screenCenterY - metersToPixels * ballDiff.dXY.y;
-		DrawBitmap(buffer, &ball->entityBitmap, ballGroundPointX, ballGroundPointY, 0, 0);
-#endif		
-	    }
-
 	}
     }
 

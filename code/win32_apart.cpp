@@ -551,15 +551,22 @@ LRESULT CALLBACK Win32MainWindowProc(HWND hwnd,
 }
 
 internal void
-Win32ProcessKeyboardMessage(game_button_state* newState, bool32 isDown, bool32 wasDown)
+Win32ProcessKeyboardMessage(game_button_state* newState, game_button_state* oldState, bool32 isDown, bool32 wasDown)
 {
     if (newState->endedDown != isDown)
     {
 	newState->endedDown = isDown;
 
+	newState->started = isDown;
 	++newState->halfTransitionCount;
     }
-    newState->wasDown = wasDown;    
+    newState->wasDown = wasDown;
+
+    //If the new state was down and is not currently down, started is true
+    if (oldState->endedDown)
+    {
+	newState->started = false;
+    }
 }
 
 internal void
@@ -678,7 +685,7 @@ ToggleFullscreen(HWND hwnd)
 }
 
 internal void
-Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyboardController)
+Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyboardController, game_controller_input* oldKeyboardController)
 {
     MSG msg;
     while (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
@@ -712,24 +719,28 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 	    u32 VKCode = (u32)msg.wParam;
 	    bool32 wasDown = ((msg.lParam & (1 << 30)) != 0);
 	    bool32 isDown = ((msg.lParam & (1 << 31)) == 0);
-	    //TODO: Change the properties here bc I don't think this will work for the setup you are trying to achieve with the precise inputs determining things like how long a button is pressed (although half transition count might be this)
+
 	    if (wasDown != isDown)
 	    {
 		if (VKCode == 'W')
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->moveUp, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->moveUp,
+						&oldKeyboardController->moveUp, isDown, wasDown);
 		}
 		else if (VKCode == 'A')
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->moveLeft, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->moveLeft,
+						&oldKeyboardController->moveLeft, isDown, wasDown);
 		}
 		else if (VKCode == 'S')
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->moveDown, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->moveDown,
+						&oldKeyboardController->moveDown, isDown, wasDown);
 		}
 		else if (VKCode == 'D')
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->moveRight, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->moveRight,
+						&oldKeyboardController->moveRight, isDown, wasDown);
 		}
 		else if (VKCode == VK_ESCAPE)
 		{
@@ -737,28 +748,34 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 		}
 		else if (VKCode == VK_SPACE)
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->actionDown, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->actionDown,
+						&oldKeyboardController->actionDown, isDown, wasDown);
 		}
 		else if (VKCode == VK_SHIFT)
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->start, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->start,
+						&oldKeyboardController->start, isDown, wasDown);
 		}
 		else if (VKCode == 'R')
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->leftShoulder, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->leftShoulder,
+						&oldKeyboardController->leftShoulder, isDown, wasDown);
 		}
 #if APART_INTERNAL
 		else if (VKCode == VK_LEFT)
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->actionLeft, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->actionLeft,
+						&oldKeyboardController->actionLeft, isDown, wasDown);
 		}
 		else if (VKCode == VK_RIGHT)
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->actionRight, isDown, wasDown);		    
+		    Win32ProcessKeyboardMessage(&keyboardController->actionRight,
+						&oldKeyboardController->actionRight, isDown, wasDown);		    
 		}
 		else if (VKCode == VK_TAB)
 		{
-		    Win32ProcessKeyboardMessage(&keyboardController->debugMode, isDown, wasDown);
+		    Win32ProcessKeyboardMessage(&keyboardController->debugMode,
+						&oldKeyboardController->debugMode, isDown, wasDown);
 		}
 		else if (VKCode == 'P')
 		{
@@ -793,7 +810,8 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 		{
 		    if (isDown)
 		    {
-			Win32ProcessKeyboardMessage(&keyboardController->scrollUp, isDown, wasDown);
+			Win32ProcessKeyboardMessage(&keyboardController->scrollUp,
+						    &oldKeyboardController->scrollUp, isDown, wasDown);
 			keyboardController->scrollUp.started = true;
 		    }
 		    else
@@ -806,7 +824,8 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 		{
 		    if (isDown)
 		    {
-			Win32ProcessKeyboardMessage(&keyboardController->scrollDown, isDown, wasDown);
+			Win32ProcessKeyboardMessage(&keyboardController->scrollDown,
+						    &oldKeyboardController->scrollDown, isDown, wasDown);
 		    }
 		    else
 		    {
@@ -818,7 +837,8 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 		    bool32 altKeyWasDown = ((msg.lParam & (1 << 29)) != 0);
 		    if ((VKCode == 'S') && altKeyWasDown)
 		    {
-			Win32ProcessKeyboardMessage(&keyboardController->save, isDown, wasDown);		
+			Win32ProcessKeyboardMessage(&keyboardController->save,
+						    &oldKeyboardController->save, isDown, wasDown);		
 		    }
 		}
 
@@ -1078,19 +1098,17 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		    {
 			newKeyboardController->buttons[buttonIndex].endedDown =
 			    oldKeyboardController->buttons[buttonIndex].endedDown;
-			newKeyboardController->buttons[buttonIndex].started =
-			    oldKeyboardController->buttons[buttonIndex].started;			
 		    }
-		    Win32ProcessPendingMessages(&win32State, newKeyboardController);
+		    Win32ProcessPendingMessages(&win32State, newKeyboardController, oldKeyboardController);
 
 		    POINT mouseP;
 		    GetCursorPos(&mouseP);
 		    ScreenToClient(window, &mouseP);
 		    newInput->mouseX = mouseP.x;
 		    newInput->mouseY = mouseP.y;
-		    Win32ProcessKeyboardMessage(&newInput->mouseButtons[0],
+		    Win32ProcessKeyboardMessage(&newInput->mouseButtons[0], &oldInput->mouseButtons[0],
 						GetKeyState(VK_LBUTTON) & (1 << 15), 0);
-		    Win32ProcessKeyboardMessage(&newInput->mouseButtons[1],
+		    Win32ProcessKeyboardMessage(&newInput->mouseButtons[1], &oldInput->mouseButtons[1],
 						GetKeyState(VK_RBUTTON) & (1 << 15), 0);		    
 
 		    ShowCursor(gameInactive);
