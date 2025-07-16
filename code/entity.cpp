@@ -283,7 +283,9 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState)
     tile_map_position testTileP = CenteredTilePoint(projectedLocation.absTileX, projectedLocation.absTileY, projectedLocation.absTileZ);
     tile_value tileValue = GetTileValue(tileMap, testTileP);
 
-    if (!IsTileValueEmpty(tileValue))
+    e_collision_type collisionType = IsTileValueEmpty(tileValue);
+    
+    if ((!collisionType) && (collisionType != e_collision_type::glide))
     {
 	entity->p = projectedLocation;
     }

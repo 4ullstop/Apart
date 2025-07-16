@@ -110,13 +110,14 @@ enum e_collision_type : u8
 {
     none = 0,
     block = 1,
-    response = 2
+    response = 2,
+	glide = 3,
 };
 
 enum e_collision_response : u8
 {
     noResponse,
-    goalResponse
+	goalResponse,
 };
 
 #include "apart_intrinsics.h"
@@ -327,7 +328,7 @@ struct game_state
     u32 entityCount;
     entity entities[256];
 
-    background_bitmaps backgroundBitmaps[4];
+    background_bitmaps backgroundBitmaps[5];
     player_bitmap playerBitmaps[2];
 
     

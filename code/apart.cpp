@@ -313,6 +313,10 @@ GetBitmapForCursor(game_state* gameState)
     {
 	result = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileBitmap;
     } break;
+    case e_tile_texture::glideTexture:
+    {
+	result = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileBitmap;	
+    } break;
     default:
     {
 	result = gameState->mouseCursorSaved;
@@ -375,6 +379,13 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	background->tileValue.collisionType = e_collision_type::none;
 	background->tileValue.tileTexture = e_tile_texture::blueBackgroundCursor;
 	background->tileValue.collisionResponse = e_collision_response::noResponse;	
+	background++;
+
+	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/glide_tile.bmp");
+	background->tileValue.collisionType = e_collision_type::glide;
+	background->tileValue.tileTexture = e_tile_texture::glideTexture;
+	background->tileValue.collisionResponse = e_collision_response::noResponse;
+	
 	
 	gameState->currSelectedTileIndex = 1;
 	
@@ -675,14 +686,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    {
 			gameState->currSelectedTileIndex++;
 			if (gameState->currSelectedTileIndex > ArrayCount(gameState->backgroundBitmaps) - 1) gameState->currSelectedTileIndex = 0;
-			gameState->inputPreviousFrame = true;
 		    }
 
 		    if (controller->actionRight.started)
 		    {
 			gameState->currSelectedTileIndex--;
 			if (gameState->currSelectedTileIndex < 0) gameState->currSelectedTileIndex = 0;
-			gameState->inputPreviousFrame = true;
 		    }
 		}
 		else
