@@ -384,8 +384,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	player->alignX = 15;
 	player->alignY = 23;
 
-	
-	
 	AddEntity(gameState);
 	
 	gameState->cameraP.absTileX = 34/2;
@@ -422,20 +420,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	tileMap->tileSideInMeters = 1.4f;
 
-#if 0
-	//Init player ball
-	{
-	    ball_entity ball = {};
-	    
-	    ball.isActive = false;
-	    ball.exists = true;
-	    ball.p = {0};
-	    ball.width = 5;
-	    ball.height = 5;	    
-	    ball.entityBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
-	    gameState->ballEntity = &ball;
-	}
-#endif
 	gameState->debugIndicatorBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/debug_indicator.bmp");
 	gameState->debugMode = false;
 
@@ -611,28 +595,25 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		r32 dPlayerX = 0.0f;
 		r32 dPlayerY = 0.0f;
 
-		if (controller->scrollUp.endedDown && (controller->scrollUp.started == false))
+		if (controller->scrollUp.started)
 		{
 		    gameState->cameraFollowingEntity = false;
 		    gameState->cameraP.absTileY += 18;
 		    gameState->cameraChunkY += 18;
-		    controller->scrollUp.started = true;
 		}
 
-		if (controller->scrollDown.endedDown && (controller->scrollDown.started == false))
+		if (controller->scrollDown.started)
 		{
 		    if (gameState->cameraP.absTileY > 18)
 		    {
 			gameState->cameraFollowingEntity = false;
 			gameState->cameraP.absTileY -= 18;
 			gameState->cameraChunkY -= 18;
-
 		    }
-		    controller->scrollDown.started = true;		    
 		}
 
 		
-		if (controller->debugMode.wasDown)
+		if (controller->debugMode.started)
 		{
 		    gameState->debugMode = !gameState->debugMode;
 		}
@@ -690,31 +671,23 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 		    }
 
-		    if ((controller->actionLeft.endedDown) && !(gameState->inputPreviousFrame))
+		    if (controller->actionLeft.started)
 		    {
 			gameState->currSelectedTileIndex++;
 			if (gameState->currSelectedTileIndex > ArrayCount(gameState->backgroundBitmaps) - 1) gameState->currSelectedTileIndex = 0;
 			gameState->inputPreviousFrame = true;
 		    }
-		    else if (controller->actionLeft.wasDown)
-		    {
-			gameState->inputPreviousFrame = false;
-		    }
 
-		    if ((controller->actionRight.endedDown) && !(gameState->inputPreviousFrame))
+		    if (controller->actionRight.started)
 		    {
 			gameState->currSelectedTileIndex--;
 			if (gameState->currSelectedTileIndex < 0) gameState->currSelectedTileIndex = 0;
 			gameState->inputPreviousFrame = true;
 		    }
-		    else if (controller->actionRight.wasDown)
-		    {
-			gameState->inputPreviousFrame = false;
-		    }
 		}
 		else
 		{
-		    if ((input->mouseButtons[0].endedDown) && !(gameState->inputPreviousFrame))
+		    if (input->mouseButtons[0].started)
 		    {
 			if (!controllingEntity->floatingMovement)
 			{
@@ -730,10 +703,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 			    gameState->inputPreviousFrame = true;
 			}
-		    }
-		    else if (input->mouseButtons[0].wasDown)
-		    {
-			gameState->inputPreviousFrame = false;
 		    }
 		}
 
@@ -756,72 +725,30 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    }
 		}
 		
-		if ((controller->leftShoulder.endedDown) && !(gameState->inputPreviousFrame))
+		if (controller->leftShoulder.started)
 		{
-		    //Reset the ball
-		    gameState->inputPreviousFrame = true;
-		    
-		}
-		else if (controller->leftShoulder.wasDown)
-		{
-		    gameState->inputPreviousFrame = false;
+		    //reset the ball, don't think i need this atm
 		}
 		
-		if ((controller->moveLeft.endedDown) && !(gameState->inputPreviousFrame))
+		if (controller->moveLeft.started)
 		{
-		    ddP.x = -1.0f;
-		    movementDetected = true;
-		    moveAnimDetected = true;
-		    gameState->cameraFollowingEntity = true;
-		    gameState->inputPreviousFrame = true;
+		    ddP.x = -1.0f;		    
+		}
 
-		}
-		else if (controller->moveLeft.wasDown)
-		{
-		    gameState->inputPreviousFrame = false;
-		}
-#if 0
-		if ((controller->moveRight.endedDown) && !(gameState->inputPreviousFrame))
-		{
-		    ddP.x = 1.0f;
-		    movementDetected = true;
-		    moveAnimDetected = true;			
-		    gameState->cameraFollowingEntity = true;
-		    gameState->inputPreviousFrame = true;		    
-		}
-		else if (controller->moveRight.wasDown)
-		{
-		    gameState->inputPreviousFrame = false;		    
-		}
-#else
 		if (controller->moveRight.started)
 		{
 		    ddP.x = 1.0f;
-		    movementDetected = true;
-		    moveAnimDetected = true;			
-		    gameState->cameraFollowingEntity = true;
-		    gameState->inputPreviousFrame = true;		    
 		}		
-#endif		
 
-		if ((controller->moveUp.endedDown) && !(gameState->inputPreviousFrame))
+		if (controller->moveUp.started)
 		{
-		    ddP.y = 1.0f;
-		    gameState->inputPreviousFrame = true;		    
-		}
-		else if (controller->moveUp.wasDown)
-		{
-		    gameState->inputPreviousFrame = false;
+		    ddP.y = 1.0f;		    
 		}
 		
-		if ((controller->moveDown.endedDown) && !(gameState->inputPreviousFrame))
+
+		if (controller->moveDown.started)
 		{
-		    ddP.y = -1.0f;
-		    gameState->inputPreviousFrame = true;		    
-		}
-		else if (controller->moveDown.wasDown)
-		{
-		    gameState->inputPreviousFrame = false;		    
+		    ddP.y = -1.0f;		    
 		}
 
 		if (controller->actionDown.endedDown)
@@ -845,10 +772,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			controllingEntity->ddP = {};
 		    }
 		    r32 exitFloatingVelocity = 0.3f;
-		    if ((controllingEntity->dP.x <= exitFloatingVelocity) && (controllingEntity->dP.y <= exitFloatingVelocity))
+
+		    if (InRange(controllingEntity->dP, -exitFloatingVelocity, exitFloatingVelocity))
 		    {
 			controllingEntity->floatingMovement = false;
 		    }
+
 		}
 		else
 		{

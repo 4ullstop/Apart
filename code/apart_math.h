@@ -149,5 +149,18 @@ ReflectionVector(v2 v, v2 n)
     v2 result = v - 2 * Inner(v, n) * n;
     return(result);
 }
+
+internal bool32
+InRange(v2 v, r32 min, r32 max)
+{
+    if ((v.x > min) && (v.x < max))
+    {
+	if ((v.y > min) && (v.y < max))
+	{
+	    return(true);
+	}
+    }
+    return(false);
+}
 #define APART_MATH_H
 #endif
