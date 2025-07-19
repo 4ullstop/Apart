@@ -304,6 +304,14 @@ struct input_timer
     r32 maxHeldTime;
 };
 
+struct state_recorder
+{
+    tile_map_position playerP;
+    state_recorder* next;
+};
+
+
+//Team Fat Struct ftw baby lets gooooooo
 struct game_state
 {
     i32 xOffset;
@@ -337,7 +345,6 @@ struct game_state
     player_bitmap playerAnimations[4];
     player_bitmap* currentPlayerBitmap;
 
-//    ball_entity* ballEntity;
 
     bool32 debugMode;
     loaded_bitmap debugIndicatorBitmap;
@@ -348,6 +355,8 @@ struct game_state
     bool32 inputPreviousFrame;
 
     input_timer* inputTimer;
+
+    state_recorder* stateRecorder;
 };
 
 

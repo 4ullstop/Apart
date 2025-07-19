@@ -369,7 +369,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	background++;
 
 	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/goal_wall.bmp");
-	background->tileValue.collisionType = e_collision_type::response;
+	background->tileValue.collisionType = e_collision_type::glide;
 	background->tileValue.collisionResponse = e_collision_response::goalResponse;	
 	background->tileValue.tileTexture = e_tile_texture::goal;
 	background++;
@@ -736,7 +736,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		
 		if (controller->leftShoulder.started)
 		{
-		    //reset the ball, don't think i need this atm
+		    //Redo input
+		    MovePlayer(ddP, controllingEntity, gameState, false);
 		}
 		
 		if (controller->moveLeft.started)
@@ -790,7 +791,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		}
 		else
 		{
-		    MovePlayer(ddP, controllingEntity, gameState);
+		    MovePlayer(ddP, controllingEntity, gameState, true);
 		}
 	    }
 	}

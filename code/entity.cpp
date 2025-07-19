@@ -1,5 +1,37 @@
 #include "entity.h"
 
+internal void
+RemoveFirstRecording(state_recorder** stateRecorder)
+{
+    if (stateRecorder == NULL)
+    {
+	//the list is empty
+	return;
+    }
+    state_recorder* temp = *stateRecorder;
+    *stateRecorder = temp->next;
+    //hmmm, you need to create a system for freeing structs from your memory pool
+}
+
+internal state_recorder*
+AddNewRecordingNode(tile_map_position playerP, memory_arena* memoryArena)
+{
+    state_recorder* newRecord = (state_recorder*)PushStruct(memoryArena, state_recorder);
+
+    newRecord->playerP = playerP;
+    newRecord->next = NULL;
+
+    return(newRecord);    
+}
+
+internal void
+AddRecording(state_recorder** recordingList, tile_map_position playerP, memory_arena* memoryArena)
+{
+    state_recorder* newRecord = AddNewRecordingNode(playerP, memoryArena);
+    newRecord->next = *recordingList;
+    *recordingList = newRecord;
+}
+
 inline entity*
 GetEntity(game_state* gameState, u32 index)
 {
@@ -255,31 +287,46 @@ MoveBall(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 }    
 
 internal void
-MovePlayer(v2 ddP, entity* entity, game_state* gameState)
+MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
 {
     tile_map* tileMap = gameState->world->tileMap;
     //Use tile_map_position which has absTile... for locations
 
-    tile_map_position projectedLocation = entity->p;    
+    tile_map_position projectedLocation = entity->p;
 
-    projectedLocation.absTileZ = 0;
-    if (ddP.x == 1.0f)
-    {
-	projectedLocation.absTileX++;
-    }
-    else if (ddP.x == -1.0f)
-    {
-	projectedLocation.absTileX--;
-    }
-    else if (ddP.y == 1.0f)
-    {
-	projectedLocation.absTileY++;
-    }
-    else if (ddP.y == -1.0f)
-    {
-	projectedLocation.absTileY--;
-    }
+    tile_map_position oldPosition = projectedLocation;
 
+    if (newStep)
+    {
+	projectedLocation.absTileZ = 0;
+	if (ddP.x == 1.0f)
+	{
+	    projectedLocation.absTileX++;
+	}
+	else if (ddP.x == -1.0f)
+	{
+	    projectedLocation.absTileX--;
+	}
+	else if (ddP.y == 1.0f)
+	{
+	    projectedLocation.absTileY++;
+	}
+	else if (ddP.y == -1.0f)
+	{
+	    projectedLocation.absTileY--;
+	}
+    }
+    else
+    {
+	//get a recorded input and remove it from the list
+	if (gameState->stateRecorder)
+	{
+	    projectedLocation = gameState->stateRecorder->playerP;
+	    //Remove node
+	    RemoveFirstRecording(&gameState->stateRecorder);
+	}
+	
+    }
     tile_map_position testTileP = CenteredTilePoint(projectedLocation.absTileX, projectedLocation.absTileY, projectedLocation.absTileZ);
     tile_value tileValue = GetTileValue(tileMap, testTileP);
 
@@ -288,6 +335,12 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState)
     if ((!collisionType) && (collisionType != e_collision_type::glide))
     {
 	entity->p = projectedLocation;
+    }
+
+    //Add new recording to the inputs
+    if (newStep && ((oldPosition.absTileX != projectedLocation.absTileX || oldPosition.absTileY != projectedLocation.absTileY)))
+    {
+	AddRecording(&gameState->stateRecorder, oldPosition, &gameState->worldArena);
     }
 }
 
@@ -301,7 +354,6 @@ MovePlayer(game_state* gameState, entity* entity, r32 dt, v2 ddP)
 
 
     test_tile_dimensions dim = GetTestTileDimensions(playerInfo.oldP, playerInfo.newP, tileMap, entity);
-
 
 
     r32 tRemaining = 1.0f;
