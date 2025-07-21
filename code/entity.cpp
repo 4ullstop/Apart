@@ -337,8 +337,10 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
 	entity->p = projectedLocation;
     }
 
+    bool32 hasMoved = (oldPosition.absTileX != projectedLocation.absTileX ||
+		       oldPosition.absTileY != projectedLocation.absTileY);
     //Add new recording to the inputs
-    if (newStep && ((oldPosition.absTileX != projectedLocation.absTileX || oldPosition.absTileY != projectedLocation.absTileY)))
+    if (newStep && hasMoved)
     {
 	AddRecording(&gameState->stateRecorder, oldPosition, &gameState->worldArena);
     }
