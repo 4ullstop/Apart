@@ -317,6 +317,10 @@ GetBitmapForCursor(game_state* gameState)
     {
 	result = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileBitmap;	
     } break;
+    case e_tile_texture::glideOnceTexture:
+    {
+	result = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileBitmap;
+    } break;
     default:
     {
 	result = gameState->mouseCursorSaved;
@@ -384,6 +388,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/glide_tile.bmp");
 	background->tileValue.collisionType = e_collision_type::glide;
 	background->tileValue.tileTexture = e_tile_texture::glideTexture;
+	background->tileValue.collisionResponse = e_collision_response::noResponse;
+	background++;
+
+	background->tileBitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/glide_once_tile.bmp");
+	background->tileValue.collisionType = e_collision_type::glideOnce;
+	background->tileValue.tileTexture = e_tile_texture::glideOnceTexture;
 	background->tileValue.collisionResponse = e_collision_response::noResponse;
 	
 	
@@ -698,7 +708,10 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		{
 		    if (input->mouseButtons[0].started)
 		    {
-			if (!controllingEntity->floatingMovement)
+			tile_value currTileValue = GetTileValue(tileMap, controllingEntity->p);
+			
+			if ((!controllingEntity->floatingMovement) &&
+			    (currTileValue.collisionType != e_collision_type::glideOnce))
 			{
 			    controllingEntity->floatingMovement = true;
 			    tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
@@ -737,7 +750,10 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		if (controller->leftShoulder.started)
 		{
 		    //Redo input
-		    MovePlayer(ddP, controllingEntity, gameState, false);
+		    if (!controllingEntity->floatingMovement)
+		    {
+			MovePlayer(ddP, controllingEntity, gameState, false);
+		    }
 		}
 		
 		if (controller->moveLeft.started)

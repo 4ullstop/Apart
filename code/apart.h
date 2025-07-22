@@ -112,6 +112,7 @@ enum e_collision_type : u8
     block = 1,
     response = 2,
 	glide = 3,
+	glideOnce = 4,
 };
 
 enum e_collision_response : u8
@@ -336,7 +337,7 @@ struct game_state
     u32 entityCount;
     entity entities[256];
 
-    background_bitmaps backgroundBitmaps[5];
+    background_bitmaps backgroundBitmaps[6];
     player_bitmap playerBitmaps[2];
 
     

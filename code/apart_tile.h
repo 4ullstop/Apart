@@ -39,6 +39,7 @@ enum e_tile_texture : u8
 	goal,
 	blueBackgroundCursor,
 	glideTexture,
+	glideOnceTexture,
 };
 
 #pragma pack(push, 1)

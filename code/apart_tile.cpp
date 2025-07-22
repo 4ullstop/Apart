@@ -192,6 +192,15 @@ IsTileValueEmpty(tile_value tileValue)
     return(result);
 }
 
+internal bool32
+CanPlayerWalkInTile(tile_value tileValue)
+{
+    bool32 result = ((!tileValue.collisionType) &&
+		     (tileValue.collisionType != e_collision_type::glide) &&
+		     (tileValue.collisionType != e_collision_type::glideOnce));
+    return(result);
+}
+
 internal tile_map_position
 GetWorldLocationFromMouse(game_input* input, game_offscreen_buffer* buffer, tile_map* tileMap, game_state* gameState)
 {

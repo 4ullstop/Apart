@@ -330,12 +330,14 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
     tile_map_position testTileP = CenteredTilePoint(projectedLocation.absTileX, projectedLocation.absTileY, projectedLocation.absTileZ);
     tile_value tileValue = GetTileValue(tileMap, testTileP);
 
-    e_collision_type collisionType = IsTileValueEmpty(tileValue);
+
     
-    if ((!collisionType) && (collisionType != e_collision_type::glide))
+
+    if (CanPlayerWalkInTile(tileValue))
     {
-	entity->p = projectedLocation;
+	entity->p = projectedLocation;	
     }
+
 
     bool32 hasMoved = (oldPosition.absTileX != projectedLocation.absTileX ||
 		       oldPosition.absTileY != projectedLocation.absTileY);
