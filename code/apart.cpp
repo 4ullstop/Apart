@@ -398,14 +398,23 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	
 	
 	gameState->currSelectedTileIndex = 1;
+
+
+	entity_bitmap* playerBitmap;
+	playerBitmap = &gameState->entityBitmaps[0];
+	playerBitmap->bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
+	playerBitmap->alignX = 15;
+	playerBitmap->alignY = 23;
+
 	
-	player_bitmap* player;
-	player = gameState->playerBitmaps;
-	player->bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
-	player->alignX = 15;
-	player->alignY = 23;
+	entity_bitmap* partyBitmap;
+	partyBitmap = &gameState->entityBitmaps[1];
+	partyBitmap->bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/ball_2.bmp");
+	partyBitmap->alignX = 15;
+	partyBitmap->alignY = 23;
 
 	AddEntity(gameState);
+
 	
 	gameState->cameraP.absTileX = 34/2;
 	gameState->cameraP.absTileY = 9;
@@ -419,7 +428,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	gameState->playerAnimations[0].alignX = 15;
 	gameState->playerAnimations[0].alignY = 23;
 
-	gameState->currentPlayerBitmap = &gameState->playerAnimations[0];
+//	gameState->currentPlayerBitmap = &gameState->playerAnimations[0];
 	gameState->world = PushStruct(&gameState->worldArena, world);
 	world* world = gameState->world;
 	world->tileMap = PushStruct(&gameState->worldArena, tile_map);
@@ -594,235 +603,250 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     gameState->inputTimer->maxHeldTime = 1000.0f * input->dTime;
     
-    for (int controllerIndex = 0; controllerIndex < ArrayCount(input->controllers); ++controllerIndex)
+    //The first controller is the only controller, I removed the ability for multiplayer
+    //bc I don't think I'll be needing it for this game
+    game_controller_input* controller = GetController(input, 0);
+
+
+    entity* controllingEntity = GetEntity(gameState, gameState->playerEntityIndex);
+
+
+    if (controllingEntity)
     {
-	game_controller_input* controller = GetController(input, controllerIndex);
-
-	entity* controllingEntity = GetEntity(gameState, gameState->playerIndexForController[controllerIndex]);
-
-
-	if (controllingEntity)
+	bool32 jumpAnimDetected = false;
+	bool32 moveAnimDetected = false;	    
+	v2 ddP = {};
+	if (controller->isAnalog)
 	{
-	    bool32 jumpAnimDetected = false;
-	    bool32 moveAnimDetected = false;	    
-	    v2 ddP = {};
-	    if (controller->isAnalog)
+
+	}
+	else
+	{
+	    
+	    r32 dPlayerX = 0.0f;
+	    r32 dPlayerY = 0.0f;
+
+	    if (controller->scrollUp.started)
 	    {
+		gameState->cameraFollowingEntity = false;
+		gameState->cameraP.absTileY += 18;
+		gameState->cameraChunkY += 18;
+	    }
+
+	    if (controller->scrollDown.started)
+	    {
+		if (gameState->cameraP.absTileY > 18)
+		{
+		    gameState->cameraFollowingEntity = false;
+		    gameState->cameraP.absTileY -= 18;
+		    gameState->cameraChunkY -= 18;
+		}
+	    }
+
+		
+	    if (controller->debugMode.started)
+	    {
+		gameState->debugMode = !gameState->debugMode;
+	    }
+		
+	    if (controller->save.endedDown)
+	    {
+		u32 screenYVal = 0;
+		u32 screenXVal = 0;
+		u32 tilesPerWidth = 33;
+		u32 tilesPerHeight = 9;
+		debug_open_file_result unsavedMapFile = memory->DEBUGPlatformOpenFile("tilemap_test.map");
+		for (u32 screenIndex = 0; screenIndex < 100; ++screenIndex)
+		{
+		    for (u32 tileY = 0; tileY < tilesPerHeight; ++tileY)
+		    {
+			for (u32 tileX = 0; tileX < tilesPerWidth; ++tileX)
+			{
+			    u32 absTileX = screenXVal * tilesPerWidth + tileX;
+			    u32 absTileY = screenYVal * tilesPerHeight + tileY;
+
+			    tile_value tileValue = GetTileValue(tileMap, absTileX, absTileY, 0);
+			    if (unsavedMapFile.fileOpened)
+			    {
+				memory->DEBUGPlatformWriteToFile(&unsavedMapFile, &tileValue, sizeof(tileValue));
+			    }
+			}
+		    }
+		    screenYVal++;			
+		}
+		if (unsavedMapFile.fileOpened)
+		{
+		    memory->DEBUGPlatformCloseFile(&unsavedMapFile);
+		}
+	    }
+
+	    if (gameState->debugMode)
+	    {
+		if ((input->mouseButtons[0].endedDown))
+		{
+		    tile_value tile = {};
+		    tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
+
+		    SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
+
+		}
+
+		if ((input->mouseButtons[1].endedDown))
+		{
+		    tile_value tile = {};
+
+		    tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
+
+		    SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
+
+
+		}
+
+		if (controller->actionLeft.started)
+		{
+		    gameState->currSelectedTileIndex++;
+		    if (gameState->currSelectedTileIndex > ArrayCount(gameState->backgroundBitmaps) - 1) gameState->currSelectedTileIndex = 0;
+		}
+
+		if (controller->actionRight.started)
+		{
+		    gameState->currSelectedTileIndex--;
+		    if (gameState->currSelectedTileIndex < 0) gameState->currSelectedTileIndex = 0;
+		}
+	    }
+	    else
+	    {
+		if (input->mouseButtons[0].started)
+		{
+		    tile_value currTileValue = GetTileValue(tileMap, controllingEntity->p);
+			
+		    if ((!controllingEntity->floatingMovement) &&
+			(currTileValue.collisionType != e_collision_type::glideOnce))
+		    {
+			controllingEntity->floatingMovement = true;
+			tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
+
+			tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &controllingEntity->p);
+
+			v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
+
+			controllingEntity->ddP = mouseDiffNormalized;
+			controllingEntity->dP = controllingEntity->ddP;
+
+			gameState->inputPreviousFrame = true;
+		    }
+		}
+	    }
+	    
+
+
+	    /*
+	      Player movement
+	    */
+	    bool32 movementDetected = false;
+	    bool32 jumpInputDetected = false;
+
+	    if (gameState->inputPreviousFrame)
+	    {
+		gameState->inputTimer->timeHeld++;
+
+		if (gameState->inputTimer->timeHeld >= gameState->inputTimer->maxHeldTime)
+		{
+		    gameState->inputPreviousFrame = false;
+		    gameState->inputTimer->timeHeld = 0.0f;
+		}
+	    }
+		
+	    if (controller->leftShoulder.started)
+	    {
+		//Redo input
+		if (!controllingEntity->floatingMovement)
+		{
+		    MovePlayer(ddP, controllingEntity, gameState, false);
+		}
+	    }
+		
+	    if (controller->moveLeft.started)
+	    {
+		ddP.x = -1.0f;		    
+	    }
+
+	    if (controller->moveRight.started)
+	    {
+		ddP.x = 1.0f;
+	    }		
+
+	    if (controller->moveUp.started)
+	    {
+		ddP.y = 1.0f;		    
+	    }
+		
+
+	    if (controller->moveDown.started)
+	    {
+		ddP.y = -1.0f;		    
+	    }
+
+	    if (controller->actionDown.endedDown)
+	    {
+
+	    }
+
+	    if (!(gameState->inputPreviousFrame))
+	    {
+		gameState->inputTimer->timeHeld = 0.0f;
+	    }
+		
+	    bool32 jumpButtonDetected = false;
+
+
+	    if (controllingEntity->floatingMovement)
+	    {
+		MoveBall(gameState, controllingEntity, input->dTime, controllingEntity->ddP);
+		if ((controllingEntity->ddP.x != 0.0f) || (controllingEntity->ddP.y != 0.0f))
+		{
+		    controllingEntity->ddP = {};
+		}
+		r32 exitFloatingVelocity = 0.3f;
+
+		if (InRange(controllingEntity->dP, -exitFloatingVelocity, exitFloatingVelocity))
+		{
+		    controllingEntity->floatingMovement = false;
+		}
 
 	    }
 	    else
 	    {
-	    
-		r32 dPlayerX = 0.0f;
-		r32 dPlayerY = 0.0f;
-
-		if (controller->scrollUp.started)
-		{
-		    gameState->cameraFollowingEntity = false;
-		    gameState->cameraP.absTileY += 18;
-		    gameState->cameraChunkY += 18;
-		}
-
-		if (controller->scrollDown.started)
-		{
-		    if (gameState->cameraP.absTileY > 18)
-		    {
-			gameState->cameraFollowingEntity = false;
-			gameState->cameraP.absTileY -= 18;
-			gameState->cameraChunkY -= 18;
-		    }
-		}
-
-		
-		if (controller->debugMode.started)
-		{
-		    gameState->debugMode = !gameState->debugMode;
-		}
-		
-		if (controller->save.endedDown)
-		{
-		    u32 screenYVal = 0;
-		    u32 screenXVal = 0;
-		    u32 tilesPerWidth = 33;
-		    u32 tilesPerHeight = 9;
-		    debug_open_file_result unsavedMapFile = memory->DEBUGPlatformOpenFile("tilemap_test.map");
-		    for (u32 screenIndex = 0; screenIndex < 100; ++screenIndex)
-		    {
-			for (u32 tileY = 0; tileY < tilesPerHeight; ++tileY)
-			{
-			    for (u32 tileX = 0; tileX < tilesPerWidth; ++tileX)
-			    {
-				u32 absTileX = screenXVal * tilesPerWidth + tileX;
-				u32 absTileY = screenYVal * tilesPerHeight + tileY;
-
-				tile_value tileValue = GetTileValue(tileMap, absTileX, absTileY, 0);
-				if (unsavedMapFile.fileOpened)
-				{
-				    memory->DEBUGPlatformWriteToFile(&unsavedMapFile, &tileValue, sizeof(tileValue));
-				}
-			    }
-			}
-			screenYVal++;			
-		    }
-		    if (unsavedMapFile.fileOpened)
-		    {
-			memory->DEBUGPlatformCloseFile(&unsavedMapFile);
-		    }
-		}
-
-		if (gameState->debugMode)
-		{
-		    if ((input->mouseButtons[0].endedDown))
-		    {
-			tile_value tile = {};
-			tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
-
-			SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
-
-		    }
-
-		    if ((input->mouseButtons[1].endedDown))
-		    {
-			tile_value tile = {};
-
-			tile = gameState->backgroundBitmaps[gameState->currSelectedTileIndex].tileValue;
-
-			SetTileValueFromMouse(input, buffer, tileMap, gameState, tile);
-
-
-		    }
-
-		    if (controller->actionLeft.started)
-		    {
-			gameState->currSelectedTileIndex++;
-			if (gameState->currSelectedTileIndex > ArrayCount(gameState->backgroundBitmaps) - 1) gameState->currSelectedTileIndex = 0;
-		    }
-
-		    if (controller->actionRight.started)
-		    {
-			gameState->currSelectedTileIndex--;
-			if (gameState->currSelectedTileIndex < 0) gameState->currSelectedTileIndex = 0;
-		    }
-		}
-		else
-		{
-		    if (input->mouseButtons[0].started)
-		    {
-			tile_value currTileValue = GetTileValue(tileMap, controllingEntity->p);
-			
-			if ((!controllingEntity->floatingMovement) &&
-			    (currTileValue.collisionType != e_collision_type::glideOnce))
-			{
-			    controllingEntity->floatingMovement = true;
-			    tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
-
-			    tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &controllingEntity->p);
-
-			    v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
-
-			    controllingEntity->ddP = mouseDiffNormalized;
-			    controllingEntity->dP = controllingEntity->ddP;
-
-			    gameState->inputPreviousFrame = true;
-			}
-		    }
-		}
-
-
-
-		/*
-		  Player movement
-		*/
-		bool32 movementDetected = false;
-		bool32 jumpInputDetected = false;
-
-		if (gameState->inputPreviousFrame)
-		{
-		    gameState->inputTimer->timeHeld++;
-
-		    if (gameState->inputTimer->timeHeld >= gameState->inputTimer->maxHeldTime)
-		    {
-			gameState->inputPreviousFrame = false;
-			gameState->inputTimer->timeHeld = 0.0f;
-		    }
-		}
-		
-		if (controller->leftShoulder.started)
-		{
-		    //Redo input
-		    if (!controllingEntity->floatingMovement)
-		    {
-			MovePlayer(ddP, controllingEntity, gameState, false);
-		    }
-		}
-		
-		if (controller->moveLeft.started)
-		{
-		    ddP.x = -1.0f;		    
-		}
-
-		if (controller->moveRight.started)
-		{
-		    ddP.x = 1.0f;
-		}		
-
-		if (controller->moveUp.started)
-		{
-		    ddP.y = 1.0f;		    
-		}
-		
-
-		if (controller->moveDown.started)
-		{
-		    ddP.y = -1.0f;		    
-		}
-
-		if (controller->actionDown.endedDown)
-		{
-
-		}
-
-		if (!(gameState->inputPreviousFrame))
-		{
-		    gameState->inputTimer->timeHeld = 0.0f;
-		}
-		
-		bool32 jumpButtonDetected = false;
-
-
-		if (controllingEntity->floatingMovement)
-		{
-		    MoveBall(gameState, controllingEntity, input->dTime, controllingEntity->ddP);
-		    if ((controllingEntity->ddP.x != 0.0f) || (controllingEntity->ddP.y != 0.0f))
-		    {
-			controllingEntity->ddP = {};
-		    }
-		    r32 exitFloatingVelocity = 0.3f;
-
-		    if (InRange(controllingEntity->dP, -exitFloatingVelocity, exitFloatingVelocity))
-		    {
-			controllingEntity->floatingMovement = false;
-		    }
-
-		}
-		else
-		{
-		    MovePlayer(ddP, controllingEntity, gameState, true);
-		}
+		MovePlayer(ddP, controllingEntity, gameState, true);
 	    }
 	}
-	else
+    }
+    else
+    {
+	if (controller->start.endedDown)
 	{
-	    if (controller->start.endedDown)
+	    //Add the player
+
 	    {
 		u32 entityIndex = AddEntity(gameState);
-		InitializePlayer(gameState, entityIndex);
-		gameState->playerIndexForController[controllerIndex] = entityIndex;
+		v2 startLoc = v2{17/2, 3.0f};
+		InitializeParty(gameState, entityIndex, startLoc, true, &gameState->entityBitmaps[0]);
+		gameState->playerEntityIndex = entityIndex;
+	    }
+
+	    //Add the party
+	    {
+		//Eventually you probably won't want to spawn this when the player spawns
+		u32 entityIndex = AddEntity(gameState);
+		v2 startLoc = v2{17.0f, 3.0f};		
+		InitializeParty(gameState, entityIndex, startLoc, false, &gameState->entityBitmaps[1]);		
+		gameState->partyEntityIndex = entityIndex;
 	    }
 	}
-	
     }
-    
+
+
+ 
     
     r32 upperLeftX = -30;
     r32 upperLeftY = 0;
@@ -928,10 +952,16 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	    v2 playerLeftTop = {playerGroundPointX - 0.5f * metersToPixels * entity->width,
 		playerGroundPointY - 0.5f * metersToPixels * entity->height};
-	    v2 entityWidthHeight = {entity->width, entity->height};
 
-	    player_bitmap* player = gameState->currentPlayerBitmap;
-	    DrawBitmap(buffer, &player->bitmap, playerGroundPointX, playerGroundPointY, player->alignX, player->alignY);
+
+//Change this
+	    if (entity->bitmap)
+	    {
+		DrawBitmap(buffer, &entity->bitmap->bitmap, playerGroundPointX, playerGroundPointY,
+			   entity->bitmap->alignX, entity->bitmap->alignY);
+	    }
+//	    player_bitmap* player = gameState->currentPlayerBitmap;
+//	    DrawBitmap(buffer, &player->bitmap, playerGroundPointX, playerGroundPointY, player->alignX, player->alignY);
 	}
     }
 
@@ -949,4 +979,3 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
     DrawBitmap(buffer, &gameState->mouseCursorBitmap, (r32)input->mouseX, (r32)input->mouseY, 20, 20);
 }
-

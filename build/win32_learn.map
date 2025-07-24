@@ -1,6 +1,6 @@
  win32_apart
 
- Timestamp is 687fbd27 (Tue Jul 22 12:32:39 2025)
+ Timestamp is 68818c8b (Wed Jul 23 21:29:47 2025)
 
  Preferred load address is 0000000140000000
 
@@ -5761,34 +5761,34 @@
  0002:00000480       ?pre_cpp_initializer@@3P6AXXZEA 0000000140064480     LIBCMT:exe_winmain.obj
  0002:00000498       ?pre_c_initializer@@3P6AHXZEA 0000000140064498     LIBCMT:exe_winmain.obj
  0002:000004a0       ?post_pgo_initializer@@3P6AHXZEA 00000001400644a0     LIBCMT:exe_winmain.obj
- 0002:00000510       $SG88539                   0000000140064510     win32_apart.obj
- 0002:00000528       $SG88540                   0000000140064528     win32_apart.obj
- 0002:00000540       $SG88561                   0000000140064540     win32_apart.obj
- 0002:00000550       $SG88562                   0000000140064550     win32_apart.obj
- 0002:00000560       $SG88564                   0000000140064560     win32_apart.obj
- 0002:00000570       $SG88565                   0000000140064570     win32_apart.obj
- 0002:00000580       $SG88573                   0000000140064580     win32_apart.obj
- 0002:000005b0       $SG88576                   00000001400645b0     win32_apart.obj
- 0002:000005d8       $SG88577                   00000001400645d8     win32_apart.obj
- 0002:00000600       $SG88584                   0000000140064600     win32_apart.obj
- 0002:00000610       $SG88586                   0000000140064610     win32_apart.obj
- 0002:00000620       $SG88588                   0000000140064620     win32_apart.obj
- 0002:00000630       $SG88591                   0000000140064630     win32_apart.obj
- 0002:00000640       $SG88592                   0000000140064640     win32_apart.obj
- 0002:00000650       $SG88593                   0000000140064650     win32_apart.obj
- 0002:00000680       $SG88663                   0000000140064680     win32_apart.obj
- 0002:00000698       $SG88665                   0000000140064698     win32_apart.obj
- 0002:000006b0       $SG88667                   00000001400646b0     win32_apart.obj
- 0002:000006c8       $SG88669                   00000001400646c8     win32_apart.obj
- 0002:000006dc       $SG88702                   00000001400646dc     win32_apart.obj
- 0002:000006e4       $SG88703                   00000001400646e4     win32_apart.obj
- 0002:000006f0       $SG88704                   00000001400646f0     win32_apart.obj
- 0002:00000708       $SG88969                   0000000140064708     win32_apart.obj
- 0002:00000718       $SG88970                   0000000140064718     win32_apart.obj
- 0002:00000728       $SG88971                   0000000140064728     win32_apart.obj
- 0002:00000738       $SG88972                   0000000140064738     win32_apart.obj
- 0002:00000750       $SG88974                   0000000140064750     win32_apart.obj
- 0002:00000760       $SG88977                   0000000140064760     win32_apart.obj
+ 0002:00000510       $SG88540                   0000000140064510     win32_apart.obj
+ 0002:00000528       $SG88541                   0000000140064528     win32_apart.obj
+ 0002:00000540       $SG88562                   0000000140064540     win32_apart.obj
+ 0002:00000550       $SG88563                   0000000140064550     win32_apart.obj
+ 0002:00000560       $SG88565                   0000000140064560     win32_apart.obj
+ 0002:00000570       $SG88566                   0000000140064570     win32_apart.obj
+ 0002:00000580       $SG88574                   0000000140064580     win32_apart.obj
+ 0002:000005b0       $SG88577                   00000001400645b0     win32_apart.obj
+ 0002:000005d8       $SG88578                   00000001400645d8     win32_apart.obj
+ 0002:00000600       $SG88585                   0000000140064600     win32_apart.obj
+ 0002:00000610       $SG88587                   0000000140064610     win32_apart.obj
+ 0002:00000620       $SG88589                   0000000140064620     win32_apart.obj
+ 0002:00000630       $SG88592                   0000000140064630     win32_apart.obj
+ 0002:00000640       $SG88593                   0000000140064640     win32_apart.obj
+ 0002:00000650       $SG88594                   0000000140064650     win32_apart.obj
+ 0002:00000680       $SG88664                   0000000140064680     win32_apart.obj
+ 0002:00000698       $SG88666                   0000000140064698     win32_apart.obj
+ 0002:000006b0       $SG88668                   00000001400646b0     win32_apart.obj
+ 0002:000006c8       $SG88670                   00000001400646c8     win32_apart.obj
+ 0002:000006dc       $SG88703                   00000001400646dc     win32_apart.obj
+ 0002:000006e4       $SG88704                   00000001400646e4     win32_apart.obj
+ 0002:000006f0       $SG88705                   00000001400646f0     win32_apart.obj
+ 0002:00000708       $SG88970                   0000000140064708     win32_apart.obj
+ 0002:00000718       $SG88971                   0000000140064718     win32_apart.obj
+ 0002:00000728       $SG88972                   0000000140064728     win32_apart.obj
+ 0002:00000738       $SG88973                   0000000140064738     win32_apart.obj
+ 0002:00000750       $SG88975                   0000000140064750     win32_apart.obj
+ 0002:00000760       $SG88978                   0000000140064760     win32_apart.obj
  0002:000007a0       GS_ExceptionPointers       00000001400647a0     LIBCMT:gs_report.obj
  0002:000007d0       ?tokenTable@@3QBUStringLiteral@@B 00000001400647d0     libvcruntime:undname.obj
  0002:000008e0       ?nameTable@@3QBUStringLiteral@@B 00000001400648e0     libvcruntime:undname.obj

@@ -1,7 +1,7 @@
 #if !defined (ENTITY_H)
 
 
-struct player_bitmap
+struct entity_bitmap
 {
     i32 alignX;
     i32 alignY;    
@@ -48,7 +48,7 @@ struct entity
 
     bool32 isInAir;
 
-    loaded_bitmap entityBitmap;
+    entity_bitmap* bitmap;
 
     r32 entitySpeed;
 

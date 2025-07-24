@@ -334,17 +334,21 @@ struct game_state
     world* world;
 
     u32 playerIndexForController[ArrayCount(((game_input*)0)->controllers)];
+    u32 partyEntityIndex;
+    u32 playerEntityIndex;
     u32 entityCount;
     entity entities[256];
 
     background_bitmaps backgroundBitmaps[6];
-    player_bitmap playerBitmaps[2];
+    //splitting the loading of these files so that they are only loaded once, and then can be
+    //assigned based on which entity needs which map, if you're feeling really zesty, make an enum for them
+    entity_bitmap entityBitmaps[2];
 
     
     i32 currSelectedTileIndex;
     
-    player_bitmap playerAnimations[4];
-    player_bitmap* currentPlayerBitmap;
+    entity_bitmap playerAnimations[4];
+//    entity_bitmap* currentPlayerBitmap;
 
 
     bool32 debugMode;

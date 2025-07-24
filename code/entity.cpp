@@ -62,23 +62,25 @@ AddEntity(game_state* gameState, entity* newEntity)
 }
 
 internal void
-InitializePlayer(game_state* gameState, u32 entityIndex)
+InitializeParty(game_state* gameState, u32 entityIndex, v2 startingLoc, bool32 shouldCamFollow, entity_bitmap* entityBitmap)
 {
     entity* entity = GetEntity(gameState, entityIndex);
     entity->exists = true;
     entity->floatingMovement = false;
-    entity->p.absTileX = 17/2;
-    entity->p.absTileY = 3;
+    entity->p.absTileX = (u32)startingLoc.x;
+    entity->p.absTileY = (u32)startingLoc.y;
     entity->p.offset.x = 0.0f;
     entity->p.offset.y = 0.0f;
     entity->height = 0.5f;
     entity->width = 1.0f;
     entity->canJump = true;
-    if (!GetEntity(gameState, gameState->cameraFollowingEntityIndex))
+    entity->bitmap = entityBitmap;
+    if (shouldCamFollow)
     {
 	gameState->cameraFollowingEntityIndex = entityIndex;
     }
 }
+
 
 internal bool32
 TestWall(r32 wallX, r32 relX, r32 relY, r32 playerDeltaX, r32 playerDeltaY, r32* tMin,
