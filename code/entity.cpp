@@ -169,11 +169,11 @@ CalculateNewP(tile_map* tileMap, v2 ddP, entity* entity, r32 dt)
 	ddP *= 1.0f / SquareRoot(ddPLength);
     }
 
-    r32 playerSpeed = 1500.0f;
-    ddP *= playerSpeed;
+    //playerSpeed must be determined by the distance of the mouse cursor
+    ddP *= entity->entitySpeed;
     
     ddP += -1.0f*entity->dP;
-    //ddP += -35.0f*entity->dP;
+
 
     result.oldP = entity->p;
 

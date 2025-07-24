@@ -338,7 +338,11 @@ PartyMouseAction(entity* entity, game_state* gameState, tile_map_position mouseP
 
     tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &entity->p);
 
+    //The diff is determined here, use this value to determine the speed for later
+    
     v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
+
+    entity->entitySpeed = 80.0f * Length(mousePlayerDiff.dXY);
 
     entity->ddP = mouseDiffNormalized;
     entity->dP = entity->ddP;
@@ -755,16 +759,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    {
 			controllingEntity->floatingMovement = true;
 			tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
-#if 0
-			tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &controllingEntity->p);
 
-			v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
-
-			controllingEntity->ddP = mouseDiffNormalized;
-			controllingEntity->dP = controllingEntity->ddP;
-
-			gameState->inputPreviousFrame = true;
-#endif
 			PartyMouseAction(controllingEntity, gameState, mousePos);
 			PartyMouseAction(partyEntity, gameState, mousePos);
 

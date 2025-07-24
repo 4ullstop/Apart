@@ -494,6 +494,16 @@ LRESULT CALLBACK Win32MainWindowProc(HWND hwnd,
     case WM_ACTIVATEAPP:
     {
 	OutputDebugStringA("activated the app\n");
+	if ((wParam & 0xffff) == WA_INACTIVE)
+	{
+	    gameInactive = true;
+	    OutputDebugString("Game is now inactive\n");
+	}
+	else
+	{
+	    gameInactive = false;
+	    OutputDebugString("Game is now active\n");		
+	}	
     } break;
     case WM_PAINT:
     {
@@ -701,10 +711,12 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 	    if ((msg.wParam & 0xffff) == WA_INACTIVE)
 	    {
 		gameInactive = true;
+		OutputDebugString("Game is now inactive\n");
 	    }
 	    else
 	    {
 		gameInactive = false;
+		OutputDebugString("Game is now active\n");		
 	    }
 	} break;
 	case WM_SETCURSOR:
@@ -1106,10 +1118,14 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 		    ScreenToClient(window, &mouseP);
 		    newInput->mouseX = mouseP.x;
 		    newInput->mouseY = mouseP.y;
-		    Win32ProcessKeyboardMessage(&newInput->mouseButtons[0], &oldInput->mouseButtons[0],
-						GetKeyState(VK_LBUTTON) & (1 << 15), 0);
-		    Win32ProcessKeyboardMessage(&newInput->mouseButtons[1], &oldInput->mouseButtons[1],
-						GetKeyState(VK_RBUTTON) & (1 << 15), 0);		    
+
+		    if (!gameInactive)
+		    {
+			Win32ProcessKeyboardMessage(&newInput->mouseButtons[0], &oldInput->mouseButtons[0],
+						    GetKeyState(VK_LBUTTON) & (1 << 15), 0);
+			Win32ProcessKeyboardMessage(&newInput->mouseButtons[1], &oldInput->mouseButtons[1],
+						    GetKeyState(VK_RBUTTON) & (1 << 15), 0);
+		    }
 
 		    ShowCursor(gameInactive);
 		    
