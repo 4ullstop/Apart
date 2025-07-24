@@ -330,6 +330,37 @@ GetBitmapForCursor(game_state* gameState)
     return(result);
 }
 
+internal void
+PartyMouseAction(entity* entity, game_state* gameState, tile_map_position mousePos)
+{
+    tile_map* tileMap = gameState->world->tileMap;
+    entity->floatingMovement = true;
+
+    tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &entity->p);
+
+    v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
+
+    entity->ddP = mouseDiffNormalized;
+    entity->dP = entity->ddP;
+
+}
+
+internal void
+EntityFloatingMovement(entity* entity, r32 dTime, game_state* gameState)
+{
+    MoveBall(gameState, entity, dTime, entity->ddP);
+    if ((entity->ddP.x != 0.0f) || (entity->ddP.y != 0.0f))
+    {
+	entity->ddP = {};
+    }
+    r32 exitFloatingVelocity = 0.3f;
+
+    if (InRange(entity->dP, -exitFloatingVelocity, exitFloatingVelocity))
+    {
+	entity->floatingMovement = false;
+    }    
+}
+
 extern "C" GAME_GET_SOUND_DATA(GameGetSoundData)
 {
 #if 0
@@ -428,7 +459,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	gameState->playerAnimations[0].alignX = 15;
 	gameState->playerAnimations[0].alignY = 23;
 
-//	gameState->currentPlayerBitmap = &gameState->playerAnimations[0];
 	gameState->world = PushStruct(&gameState->worldArena, world);
 	world* world = gameState->world;
 	world->tileMap = PushStruct(&gameState->worldArena, tile_map);
@@ -609,9 +639,9 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 
     entity* controllingEntity = GetEntity(gameState, gameState->playerEntityIndex);
-
-
-    if (controllingEntity)
+    entity* partyEntity = GetEntity(gameState, gameState->partyEntityIndex);
+    
+    if (controllingEntity && partyEntity)
     {
 	bool32 jumpAnimDetected = false;
 	bool32 moveAnimDetected = false;	    
@@ -725,7 +755,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		    {
 			controllingEntity->floatingMovement = true;
 			tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
-
+#if 0
 			tile_map_difference mousePlayerDiff = Subtract(tileMap, &mousePos, &controllingEntity->p);
 
 			v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
@@ -734,6 +764,10 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			controllingEntity->dP = controllingEntity->ddP;
 
 			gameState->inputPreviousFrame = true;
+#endif
+			PartyMouseAction(controllingEntity, gameState, mousePos);
+			PartyMouseAction(partyEntity, gameState, mousePos);
+
 		    }
 		}
 	    }
@@ -802,18 +836,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	    if (controllingEntity->floatingMovement)
 	    {
-		MoveBall(gameState, controllingEntity, input->dTime, controllingEntity->ddP);
-		if ((controllingEntity->ddP.x != 0.0f) || (controllingEntity->ddP.y != 0.0f))
-		{
-		    controllingEntity->ddP = {};
-		}
-		r32 exitFloatingVelocity = 0.3f;
-
-		if (InRange(controllingEntity->dP, -exitFloatingVelocity, exitFloatingVelocity))
-		{
-		    controllingEntity->floatingMovement = false;
-		}
-
+		EntityFloatingMovement(controllingEntity, input->dTime, gameState);
+		EntityFloatingMovement(partyEntity, input->dTime, gameState);
 	    }
 	    else
 	    {
@@ -838,7 +862,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    {
 		//Eventually you probably won't want to spawn this when the player spawns
 		u32 entityIndex = AddEntity(gameState);
-		v2 startLoc = v2{17.0f, 3.0f};		
+		v2 startLoc = v2{30.0f, 3.0f};		
 		InitializeParty(gameState, entityIndex, startLoc, false, &gameState->entityBitmaps[1]);		
 		gameState->partyEntityIndex = entityIndex;
 	    }
@@ -893,43 +917,13 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    v2 min = cen - tileSide;
 	    v2 max = cen + tileSide;
 
-#if 0	    
-	    if (tileId >= 1)
-	    {
-		r32 gray = 0.5f;
-		if (tileId == 2)
-		{
-		    gray = 1.0f;
-		    v2 tileLoc = {screenCenterX - metersToPixels * gameState->cameraP.offset.x +
-			((r32)relColumn) * tileSideInPixels,
-			screenCenterY + metersToPixels * gameState->cameraP.offset.y -
-			((r32)relRow) * tileSideInPixels};		    
-		    background_bitmaps* background = &gameState->backgroundBitmaps[0];
-		    DrawBackgroundTile(buffer, &background->tileBitmap, min, max);
-		}
-		else
-		{
-		    if (tileId == 1)
-		    {
-			gray = 0.5f;
-		    }
-
-		    if (tileId > 2)
-		    {
-			gray = 0.25f;
-		    }
-	
-		    DrawRectangle(buffer, min, max, gray, gray, gray);
-		}
-	    }
-#else
 	    v2 tileLoc = {screenCenterX - metersToPixels * gameState->cameraP.offset.x +
 		((r32)relColumn) * tileSideInPixels,
 		screenCenterY + metersToPixels * gameState->cameraP.offset.y -
 		((r32)relRow) * tileSideInPixels};		    
 	    background_bitmaps* background = &gameState->backgroundBitmaps[tileId.tileTexture];
 	    DrawBackgroundTile(buffer, &background->tileBitmap, min, max);
-#endif	    
+
 	}
     }
 
@@ -954,14 +948,13 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		playerGroundPointY - 0.5f * metersToPixels * entity->height};
 
 
-//Change this
 	    if (entity->bitmap)
 	    {
+		//Not a huge fan of the entity->bitmap->bitmap, i'll think of something in the future
 		DrawBitmap(buffer, &entity->bitmap->bitmap, playerGroundPointX, playerGroundPointY,
 			   entity->bitmap->alignX, entity->bitmap->alignY);
 	    }
-//	    player_bitmap* player = gameState->currentPlayerBitmap;
-//	    DrawBitmap(buffer, &player->bitmap, playerGroundPointX, playerGroundPointY, player->alignX, player->alignY);
+
 	}
     }
 
