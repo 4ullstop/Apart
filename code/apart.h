@@ -340,8 +340,6 @@ struct game_state
     entity entities[256];
 
     background_bitmaps backgroundBitmaps[6];
-    //splitting the loading of these files so that they are only loaded once, and then can be
-    //assigned based on which entity needs which map, if you're feeling really zesty, make an enum for them
     entity_bitmap entityBitmaps[2];
 
     
@@ -362,6 +360,7 @@ struct game_state
     input_timer* inputTimer;
 
     state_recorder* stateRecorder;
+
 };
 
 

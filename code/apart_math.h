@@ -48,6 +48,15 @@ operator*(v2 b, r32 a)
     return(result); 
 }
 
+inline v2
+operator/(v2 b, r32 a)
+{
+    v2 result;
+    result.x = b.x / a;
+    result.y = b.y / a;
+    return(result);
+}
+
 inline v2 &v2::
 operator*=(r32 a)
 {

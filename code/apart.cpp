@@ -331,7 +331,7 @@ GetBitmapForCursor(game_state* gameState)
 }
 
 internal void
-PartyMouseAction(entity* entity, game_state* gameState, tile_map_position mousePos)
+PartyMouseAction(entity* entity, game_state* gameState, tile_map_position mousePos, r32 dTime)
 {
     tile_map* tileMap = gameState->world->tileMap;
     entity->floatingMovement = true;
@@ -342,10 +342,12 @@ PartyMouseAction(entity* entity, game_state* gameState, tile_map_position mouseP
     
     v2 mouseDiffNormalized = NormalizeV2(mousePlayerDiff.dXY);
 
-    entity->entitySpeed = 80.0f * Length(mousePlayerDiff.dXY);
+    r32 distance = LengthSq(mousePlayerDiff.dXY);
+    distance = (r32)sqrt(distance);
 
-    entity->ddP = mouseDiffNormalized;
-    entity->dP = entity->ddP;
+    entity->entitySpeed = distance * 1.0f;
+
+    entity->dP = mouseDiffNormalized * entity->entitySpeed;
 
 }
 
@@ -392,6 +394,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     
     if (!memory->isInitialized)
     {
+
+
 
 	background_bitmaps* background;
 	background = gameState->backgroundBitmaps;
@@ -760,8 +764,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			controllingEntity->floatingMovement = true;
 			tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
 
-			PartyMouseAction(controllingEntity, gameState, mousePos);
-			PartyMouseAction(partyEntity, gameState, mousePos);
+			PartyMouseAction(controllingEntity, gameState, mousePos, input->dTime);
+			PartyMouseAction(partyEntity, gameState, mousePos, input->dTime);
 
 		    }
 		}

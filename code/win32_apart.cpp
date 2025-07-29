@@ -961,7 +961,7 @@ int CALLBACK WinMain(HINSTANCE hInstance,
 	HWND window = CreateWindowEx(
 	    0,
 	    wc.lpszClassName,
-	    "Jumper Game",
+	    "Apart",
 	    WS_OVERLAPPEDWINDOW|WS_VISIBLE,
 	    CW_USEDEFAULT,
 	    CW_USEDEFAULT,
