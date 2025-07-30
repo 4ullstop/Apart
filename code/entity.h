@@ -39,6 +39,9 @@ struct entity
     bool32 exists;
 
     tile_map_position p;
+
+    tile_map_position originalP;
+    
     u32 facingDirection;
     v2 dP;
     r32 width, height;

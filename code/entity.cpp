@@ -71,6 +71,7 @@ InitializeParty(game_state* gameState, u32 entityIndex, v2 startingLoc, bool32 s
     entity->p.absTileY = (u32)startingLoc.y;
     entity->p.offset.x = 0.0f;
     entity->p.offset.y = 0.0f;
+    entity->originalP = entity->p;
     entity->height = 0.5f;
     entity->width = 1.0f;
     entity->canJump = true;

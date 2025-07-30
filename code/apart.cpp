@@ -331,7 +331,7 @@ GetBitmapForCursor(game_state* gameState)
 }
 
 internal void
-PartyMouseAction(entity* entity, game_state* gameState, tile_map_position mousePos, r32 dTime)
+PartyMouseAction(entity* entity, game_state* gameState, tile_map_position mousePos)
 {
     tile_map* tileMap = gameState->world->tileMap;
     entity->floatingMovement = true;
@@ -394,8 +394,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     
     if (!memory->isInitialized)
     {
-
-
 
 	background_bitmaps* background;
 	background = gameState->backgroundBitmaps;
@@ -764,8 +762,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			controllingEntity->floatingMovement = true;
 			tile_map_position mousePos = GetWorldLocationFromMouse(input, buffer, tileMap, gameState);
 
-			PartyMouseAction(controllingEntity, gameState, mousePos, input->dTime);
-			PartyMouseAction(partyEntity, gameState, mousePos, input->dTime);
+			PartyMouseAction(controllingEntity, gameState, mousePos);
+			PartyMouseAction(partyEntity, gameState, mousePos);
 
 		    }
 		}
@@ -797,6 +795,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 		{
 		    MovePlayer(ddP, controllingEntity, gameState, false);
 		}
+	    }
+
+	    if (controller->rightShoulder.started)
+	    {
+		//Reset from start input
+		//But what does start mean?
 	    }
 		
 	    if (controller->moveLeft.started)

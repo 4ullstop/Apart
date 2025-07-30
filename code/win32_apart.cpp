@@ -773,6 +773,11 @@ Win32ProcessPendingMessages(win32_state* win32State, game_controller_input* keyb
 		    Win32ProcessKeyboardMessage(&keyboardController->leftShoulder,
 						&oldKeyboardController->leftShoulder, isDown, wasDown);
 		}
+		else if (VKCode == 'Z')
+		{
+		    Win32ProcessKeyboardMessage(&keyboardController->rightShoulder,
+						&oldKeyboardController->rightShoulder, isDown, wasDown);
+		}
 #if APART_INTERNAL
 		else if (VKCode == VK_LEFT)
 		{
