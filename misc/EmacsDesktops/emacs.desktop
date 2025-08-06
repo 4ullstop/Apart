@@ -2,32 +2,44 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Wed Jul 30 16:45:28 2025
+;; Created Wed Aug  6 11:11:49 2025
 ;; Desktop file format version 208
 ;; Emacs version 29.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (26762 33896 753762 0) (desktop . "208") "easte@MSI" nil nil ((((minibuffer . t) (undecorated) (skip-taskbar) (font . "-outline-Courier New-regular-normal-normal-mono-14-*-*-*-c-*-iso8859-1") (border-width . 0) (internal-border-width . 0) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#c6a57b") (background-color . "#151515") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 10) (right-fringe . 10) (no-focus-on-map) (no-accept-focus) (no-special-glyphs) (alpha-background) (alpha) (menu-bar-lines . 0) (tab-bar-lines . 0) (height . 59) (tool-bar-lines . 0) (inhibit-double-buffering) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 17) (scroll-bar-height . 17) (fullscreen . maximized) (z-group) (visibility . t) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#c6a57b") (font-parameter) (environment) (last-focus-update . t) (frameset--id . "B974-B932-104D-E2D7") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (display . "w32") (explicit-name) (tool-bar-position . top) (width . 237) (left + -1928) (top + -7)) ((min-height . 4) (min-width . 20) (min-height-ignore . 3) (min-width-ignore . 10) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 68) (min-pixel-width . 160) (min-pixel-height-ignore . 51) (min-pixel-width-ignore . 80) (min-pixel-height-safe . 17) (min-pixel-width-safe . 32)) hc (pixel-width . 1920) (pixel-height . 992) (total-width . 240) (total-height . 58) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 956) (pixel-height . 992) (total-width . 119) (total-height . 58) (normal-height . 1.0) (normal-width . 0.49696969696969695) (buffer "apart.cpp" (selected) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 1) (start . 1)) (prev-buffers ("code" 1 155) ("f:/" 1 199) ("misc" 1 57) (".emacs" 1869 2777) ("*scratch*" 1 1))) (leaf (last . t) (pixel-width . 964) (pixel-height . 992) (total-width . 121) (total-height . 58) (normal-height . 1.0) (normal-width . 0.503030303030303) (buffer "*Compiler Shell*" (selected . t) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 475) (start . 1)) (prev-buffers ("apart.cpp" 1 1)))))])
+(setq desktop-saved-frameset [frameset 1 (26771 28853 343717 0) (desktop . "208") "easte@MSI" nil nil ((((minibuffer . t) (undecorated) (skip-taskbar) (font . "-outline-Courier New-regular-normal-normal-mono-14-*-*-*-c-*-iso8859-1") (border-width . 0) (internal-border-width . 0) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#c6a57b") (background-color . "#151515") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 10) (right-fringe . 10) (no-focus-on-map) (no-accept-focus) (no-special-glyphs) (alpha-background) (alpha) (menu-bar-lines . 0) (tab-bar-lines . 0) (height . 59) (tool-bar-lines . 0) (inhibit-double-buffering) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 17) (scroll-bar-height . 17) (fullscreen . maximized) (z-group) (visibility . t) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#c6a57b") (font-parameter) (environment) (last-focus-update) (frameset--id . "B974-B932-104D-E2D7") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (display . "w32") (explicit-name) (tool-bar-position . top) (width . 237) (left + -1928) (top + -7)) ((min-height . 4) (min-width . 20) (min-height-ignore . 3) (min-width-ignore . 10) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 68) (min-pixel-width . 160) (min-pixel-height-ignore . 51) (min-pixel-width-ignore . 80) (min-pixel-height-safe . 17) (min-pixel-width-safe . 32)) hc (pixel-width . 1920) (pixel-height . 992) (total-width . 240) (total-height . 58) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 960) (pixel-height . 992) (total-width . 120) (total-height . 58) (normal-height . 1.0) (normal-width . 0.5) (buffer "apart.h" (selected . t) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 6906) (start . 6289)) (prev-buffers ("apart.cpp" 11916 12927) ("code" 1 155) ("*Compiler Shell*" 8147 12106) ("win32_apart.cpp" 25555 25987) ("win32_apart.h" 1 1) ("entity.cpp" 1 483) ("apart.h" 1 1))) (leaf (last . t) (pixel-width . 960) (pixel-height . 992) (total-width . 120) (total-height . 58) (normal-height . 1.0) (normal-width . 0.5) (buffer "apart.cpp" (selected) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 12927) (start . 11916)))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
-(setq search-ring nil)
+(setq search-ring '(#("InitializeArena" 0 15 (isearch-case-fold-search nil isearch-regexp-function nil)) #("game_memory" 0 11 (isearch-case-fold-search t isearch-regexp-function nil)) #("Initiali" 0 8 (isearch-case-fold-search nil isearch-regexp-function nil)) #("Push" 0 4 (isearch-case-fold-search nil isearch-regexp-function nil)) #("VirtualAlloc" 0 12 (isearch-case-fold-search nil isearch-regexp-function nil)) #("Add" 0 3 (isearch-case-fold-search nil isearch-regexp-function nil)) #("AddREcording" 0 12 (isearch-case-fold-search nil isearch-regexp-function nil)) #("AddNewR" 0 7 (isearch-case-fold-search nil isearch-regexp-function nil)) #("RemoveFirst" 0 11 (isearch-case-fold-search nil isearch-regexp-function nil)) #("inputPrevious" 0 13 (isearch-case-fold-search nil isearch-regexp-function nil)) #("inputPreviousFrame" 0 18 (isearch-case-fold-search nil isearch-regexp-function nil)) #("playerTop" 0 9 (isearch-case-fold-search nil isearch-regexp-function nil)) #("Initi" 0 5 (isearch-case-fold-search nil isearch-regexp-function nil))))
 (setq regexp-search-ring nil)
 (setq register-alist nil)
-(setq file-name-history '("f:/misc/"))
+(setq file-name-history '("f:/code/" "f:/misc/"))
 
 ;; Buffer section -- buffers listed in same order as in buffer list:
+(desktop-create-buffer 208
+  "f:/code/apart.h"
+  "apart.h"
+  'c-mode
+  '(font-lock-mode)
+  6906
+  '(6798 nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-display-time 26771 28783 303437 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring (1 6907 7744 6890 6939 6678 6939 6798 7744 6939 6798 5628 4496 7709 6796 5696))))
+
 (desktop-create-buffer 208
   "f:/code/apart.cpp"
   "apart.cpp"
   'c++-mode
   '(font-lock-mode)
-  1
-  '(nil nil)
+  12927
+  '(12885 nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26762 33896 19525 0) (buffer-file-coding-system . undecided-dos))
-  '((mark-ring nil)))
+  '((indent-tabs-mode . t) (buffer-display-time 26771 28781 562314 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring (13992 21600 20931 20931 12837 12837 24593 12836 12945 12885))))
 
 (desktop-create-buffer 208
   nil
@@ -38,19 +50,91 @@
   '(nil nil)
   t
   '("f:/code/")
-  '((buffer-display-time 26762 33878 271134 0))
+  '((buffer-display-time 26771 28775 191481 0))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
-  nil
-  "f:/"
-  'dired-mode
+  "f:/code/win32_apart.cpp"
+  "win32_apart.cpp"
+  'c++-mode
   '(font-lock-mode)
-  199
+  25987
+  '(1 nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-display-time 26771 28041 358101 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "d:/emacs/emacs-29.0.92/emacs-29.1/share/emacs/29.1/etc/PROBLEMS"
+  "PROBLEMS"
+  'outline-mode
+  '(goto-address-mode view-mode font-lock-mode)
+  1
   '(nil nil)
   t
-  '("f:/")
-  '((buffer-display-time 26762 33877 383475 0))
+  nil
+  '((buffer-display-time 26771 28316 141937 0) (buffer-file-coding-system . utf-8-unix))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "f:/code/win32_apart.h"
+  "win32_apart.h"
+  'c-mode
+  '(font-lock-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-display-time 26771 27079 990245 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "f:/code/entity.h"
+  "entity.h"
+  'c++-mode
+  '(font-lock-mode)
+  690
+  '(nil nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-display-time 26771 26789 927826 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "f:/code/entity.cpp"
+  "entity.cpp"
+  'c++-mode
+  '(font-lock-mode)
+  924
+  '(3332 nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-display-time 26771 26746 833072 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring (1827 1433 1432 1343 1511 179 481 179 179 481 481 481 481 481 481 924))))
+
+(desktop-create-buffer 208
+  "f:/code/apart_math.h"
+  "apart_math.h"
+  'c-mode
+  '(font-lock-mode)
+  1
+  '(nil nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-display-time 26770 24074 666712 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  "f:/misc/shell.bat"
+  "shell.bat"
+  'bat-mode
+  '(font-lock-mode)
+  308
+  '(nil nil)
+  nil
+  nil
+  '((buffer-display-time 26770 23586 2303 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -58,11 +142,23 @@
   "misc"
   'dired-mode
   '(font-lock-mode)
-  57
+  318
   '(nil nil)
   t
   '("f:/misc/")
-  '((buffer-display-time 26762 33875 168901 0))
+  '((buffer-display-time 26770 23590 982966 0))
+  '((mark-ring nil)))
+
+(desktop-create-buffer 208
+  nil
+  "f:/"
+  'dired-mode
+  '(font-lock-mode)
+  465
+  '(nil nil)
+  t
+  '("f:/")
+  '((buffer-display-time 26770 23591 961386 0))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -74,6 +170,6 @@
   '(2777 nil)
   nil
   nil
-  '((buffer-display-time 26762 33891 84535 0) (buffer-file-coding-system . undecided-dos))
+  '((buffer-display-time 26771 25598 452206 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 

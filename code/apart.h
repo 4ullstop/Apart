@@ -305,22 +305,24 @@ struct input_timer
     r32 maxHeldTime;
 };
 
-struct state_recorder
+#define MEMORY_LIST_SIZE 100
+
+struct state_recorder_node
 {
     tile_map_position playerP;
-    state_recorder* next;
+    state_recorder_node* next;
 };
 
+struct state_recorder
+{
+    state_recorder_node* stateRecorderFreedMemory[MEMORY_LIST_SIZE];
+    state_recorder_node* stateRecorder;
+    i32 lastRecordIndex;    
+};
 
 //Team Fat Struct ftw baby lets gooooooo
 struct game_state
 {
-    i32 xOffset;
-    i32 yOffset;
-
-    r32 playerX;
-    r32 playerY;
-
     bool32 started;
 
     bool32 cameraFollowingEntity;
@@ -345,9 +347,6 @@ struct game_state
     
     i32 currSelectedTileIndex;
     
-    entity_bitmap playerAnimations[4];
-//    entity_bitmap* currentPlayerBitmap;
-
 
     bool32 debugMode;
     loaded_bitmap debugIndicatorBitmap;
@@ -355,15 +354,11 @@ struct game_state
     loaded_bitmap mouseCursorBitmap;
     loaded_bitmap mouseCursorSaved;
     
-    bool32 inputPreviousFrame;
 
-    input_timer* inputTimer;
-
-    state_recorder* stateRecorder;
+    memory_arena stateRecorderArena;
+    state_recorder stateRecorder;
 
 };
-
-
 
 #define APART_H
 #endif

@@ -1,7 +1,23 @@
 #include "entity.h"
 
 internal void
-RemoveFirstRecording(state_recorder** stateRecorder)
+AddNodeToFreedList(game_state* gameState, state_recorder* oldLocation)
+{
+    state_recorder** stateList = gameState->stateRecorderFreedMemory;
+
+    for (u32 recordingIndex = 0; recordingIndex < MEMORY_LIST_SIZE; recordingIndex++)
+    {
+	if (gameState->stateRecorderFreedMemory[recordingIndex] == 0)
+	{
+	    gameState->stateRecorderFreedMemory[recordingIndex] = oldLocation;
+	    gameState->lastRecordIndex = recordingIndex;
+	    break;
+	}
+    }
+}
+
+internal void
+RemoveFirstRecording(game_state* gameState, state_recorder** stateRecorder)
 {
     if (stateRecorder == NULL)
     {
@@ -9,14 +25,37 @@ RemoveFirstRecording(state_recorder** stateRecorder)
 	return;
     }
     state_recorder* temp = *stateRecorder;
+    AddNodeToFreedList(gameState, temp);    
     *stateRecorder = temp->next;
     //hmmm, you need to create a system for freeing structs from your memory pool
+
 }
 
 internal state_recorder*
-AddNewRecordingNode(tile_map_position playerP, memory_arena* memoryArena)
+FindUnusedLocation(game_state* gameState)
 {
-    state_recorder* newRecord = (state_recorder*)PushStruct(memoryArena, state_recorder);
+    state_recorder* result = 0;
+    if (gameState->lastRecordIndex > 0)
+    {
+	result = gameState->stateRecorderFreedMemory[gameState->lastRecordIndex];
+	//set the value to 0d
+	gameState->lastRecordIndex--;
+    }
+
+    return(result);
+}
+
+internal state_recorder*
+AddNewRecordingNode(tile_map_position playerP, memory_arena* memoryArena, game_state* gameState)
+{
+    //Check that there isn't a spot open in the old list
+    state_recorder* newRecord = FindUnusedLocation(gameState);
+    if (!newRecord)
+    {
+	newRecord = (state_recorder*)PushStruct(memoryArena, state_recorder);
+    }
+    
+
 
     newRecord->playerP = playerP;
     newRecord->next = NULL;
@@ -25,9 +64,9 @@ AddNewRecordingNode(tile_map_position playerP, memory_arena* memoryArena)
 }
 
 internal void
-AddRecording(state_recorder** recordingList, tile_map_position playerP, memory_arena* memoryArena)
+AddRecording(state_recorder** recordingList, tile_map_position playerP, memory_arena* memoryArena, game_state* gameState)
 {
-    state_recorder* newRecord = AddNewRecordingNode(playerP, memoryArena);
+    state_recorder* newRecord = AddNewRecordingNode(playerP, memoryArena, gameState);
     newRecord->next = *recordingList;
     *recordingList = newRecord;
 }
@@ -76,6 +115,10 @@ InitializeParty(game_state* gameState, u32 entityIndex, v2 startingLoc, bool32 s
     entity->width = 1.0f;
     entity->canJump = true;
     entity->bitmap = entityBitmap;
+
+    //Push first location onto list
+    AddRecording(&gameState->stateRecorder, entity->p, &gameState->worldArena, gameState);
+    
     if (shouldCamFollow)
     {
 	gameState->cameraFollowingEntityIndex = entityIndex;
@@ -326,7 +369,7 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
 	{
 	    projectedLocation = gameState->stateRecorder->playerP;
 	    //Remove node
-	    RemoveFirstRecording(&gameState->stateRecorder);
+	    RemoveFirstRecording(gameState, &gameState->stateRecorder);
 	}
 	
     }
@@ -347,7 +390,7 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
     //Add new recording to the inputs
     if (newStep && hasMoved)
     {
-	AddRecording(&gameState->stateRecorder, oldPosition, &gameState->worldArena);
+	AddRecording(&gameState->stateRecorder, oldPosition, &gameState->worldArena, gameState);
     }
 }
 

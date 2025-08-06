@@ -460,11 +460,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	InitializeArena(&gameState->worldArena, memory->permanentStorageSize - sizeof(game_state),
 			(u8*)memory->permanentStorage + sizeof(game_state));
 
+	//Initialize a new arena for transient stuff
+	InitializeArena(&gameState->stateRecorderArena, memory->transientStorageSize - sizeof(game_state),
+		       (u8*)memory->transientStorage + sizeof(game_state));
 
-	gameState->playerAnimations[0].bitmap = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/Ball.bmp");
-	gameState->playerAnimations[0].alignX = 15;
-	gameState->playerAnimations[0].alignY = 23;
-
+	gameState->stateRecorder = PushStruct(&gameState->stateRecorderArena, state_recorder);
+	
 	gameState->world = PushStruct(&gameState->worldArena, world);
 	world* world = gameState->world;
 	world->tileMap = PushStruct(&gameState->worldArena, tile_map);
@@ -497,6 +498,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	input_timer inputTimer = {};
 	inputTimer.maxHeldTime = 10.0f;
 	gameState->inputTimer = &inputTimer;
+
+	
 	
 	// the number of tiles per chunk
 	u32 tilesPerWidth = 33;
@@ -777,16 +780,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	    bool32 movementDetected = false;
 	    bool32 jumpInputDetected = false;
 
-	    if (gameState->inputPreviousFrame)
-	    {
-		gameState->inputTimer->timeHeld++;
-
-		if (gameState->inputTimer->timeHeld >= gameState->inputTimer->maxHeldTime)
-		{
-		    gameState->inputPreviousFrame = false;
-		    gameState->inputTimer->timeHeld = 0.0f;
-		}
-	    }
 		
 	    if (controller->leftShoulder.started)
 	    {
@@ -829,10 +822,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	    }
 
-	    if (!(gameState->inputPreviousFrame))
-	    {
-		gameState->inputTimer->timeHeld = 0.0f;
-	    }
 		
 	    bool32 jumpButtonDetected = false;
 
@@ -934,8 +923,8 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     r32 playerWidth = 0.75f*(r32)tileWidth;
     r32 playerHeight = (r32)tileHeight;
 
-    r32 playerTop = gameState->playerY - playerHeight;
-    r32 playerLeft = gameState->playerX - 0.5f * playerWidth;
+
+
 
     entity* entity = gameState->entities;
     for (u32 entityIndex = 0; entityIndex < gameState->entityCount; ++entityIndex, ++entity)
