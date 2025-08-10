@@ -1,76 +1,5 @@
 #include "entity.h"
 
-internal void
-AddNodeToFreedList(game_state* gameState, state_recorder* oldLocation)
-{
-    state_recorder** stateList = gameState->stateRecorderFreedMemory;
-
-    for (u32 recordingIndex = 0; recordingIndex < MEMORY_LIST_SIZE; recordingIndex++)
-    {
-	if (gameState->stateRecorderFreedMemory[recordingIndex] == 0)
-	{
-	    gameState->stateRecorderFreedMemory[recordingIndex] = oldLocation;
-	    gameState->lastRecordIndex = recordingIndex;
-	    break;
-	}
-    }
-}
-
-internal void
-RemoveFirstRecording(game_state* gameState, state_recorder** stateRecorder)
-{
-    if (stateRecorder == NULL)
-    {
-	//the list is empty
-	return;
-    }
-    state_recorder* temp = *stateRecorder;
-    AddNodeToFreedList(gameState, temp);    
-    *stateRecorder = temp->next;
-    //hmmm, you need to create a system for freeing structs from your memory pool
-
-}
-
-internal state_recorder*
-FindUnusedLocation(game_state* gameState)
-{
-    state_recorder* result = 0;
-    if (gameState->lastRecordIndex > 0)
-    {
-	result = gameState->stateRecorderFreedMemory[gameState->lastRecordIndex];
-	//set the value to 0d
-	gameState->lastRecordIndex--;
-    }
-
-    return(result);
-}
-
-internal state_recorder*
-AddNewRecordingNode(tile_map_position playerP, memory_arena* memoryArena, game_state* gameState)
-{
-    //Check that there isn't a spot open in the old list
-    state_recorder* newRecord = FindUnusedLocation(gameState);
-    if (!newRecord)
-    {
-	newRecord = (state_recorder*)PushStruct(memoryArena, state_recorder);
-    }
-    
-
-
-    newRecord->playerP = playerP;
-    newRecord->next = NULL;
-
-    return(newRecord);    
-}
-
-internal void
-AddRecording(state_recorder** recordingList, tile_map_position playerP, memory_arena* memoryArena, game_state* gameState)
-{
-    state_recorder* newRecord = AddNewRecordingNode(playerP, memoryArena, gameState);
-    newRecord->next = *recordingList;
-    *recordingList = newRecord;
-}
-
 inline entity*
 GetEntity(game_state* gameState, u32 index)
 {
@@ -101,6 +30,73 @@ AddEntity(game_state* gameState, entity* newEntity)
 }
 
 internal void
+StatePoolFree(state_recorder* recording, void* ptr)
+{
+    if ((recording == 0) || (ptr == 0))
+    {
+	return;
+    }
+
+    state_recorder_node* freed = (state_recorder_node*)ptr;
+    freed->next = recording->freeNodes;
+    recording->freeNodes = freed;
+}
+
+internal void*
+StatePoolAlloc(state_recorder* recording)
+{
+    state_recorder_node* result = 0;
+    if ((recording == 0) || (recording->freeNodes == 0))
+    {
+	return(result);
+    }
+    
+    result = recording->freeNodes;
+    recording->freeNodes = recording->freeNodes->next;
+    return(result);
+}
+
+internal void
+RemoveStateRecording(state_recorder* recorderMemory, state_recorder_node** recorderList)
+{
+    if (recorderList == 0)
+    {
+	return;
+    }
+    state_recorder_node* temp = *recorderList;
+    *recorderList = (*recorderList)->next;
+
+    //Now free temp from the pool
+    StatePoolFree(recorderMemory, temp);
+}
+
+internal void
+AddStateRecording(state_recorder* recorderMemory, tile_map_position newP, state_recorder_node** recorderList)
+{
+    //Create new list if one doesn't exist
+    //Find a location to put the info
+    //Connect the location to the main list of filled locations
+
+    //The chunk array is the used places
+    //The freed list is the unused places
+    //When you use a new location, remove the item from the freed list and place in chunk array?
+
+    state_recorder_node* newNode = (state_recorder_node*)StatePoolAlloc(recorderMemory);
+    newNode->p = newP;
+    //Add to recording list to be taken out of
+    if (recorderList == 0)
+    {
+	*recorderList = newNode;
+    }
+    else
+    {
+	newNode->next = *recorderList;
+	*recorderList = newNode;
+    }
+    
+}
+
+internal void
 InitializeParty(game_state* gameState, u32 entityIndex, v2 startingLoc, bool32 shouldCamFollow, entity_bitmap* entityBitmap)
 {
     entity* entity = GetEntity(gameState, entityIndex);
@@ -116,8 +112,9 @@ InitializeParty(game_state* gameState, u32 entityIndex, v2 startingLoc, bool32 s
     entity->canJump = true;
     entity->bitmap = entityBitmap;
 
+    AddStateRecording(gameState->stateRecorderMemory, entity->p, &gameState->stateRecorderList);
     //Push first location onto list
-    AddRecording(&gameState->stateRecorder, entity->p, &gameState->worldArena, gameState);
+//    AddRecording(&gameState->stateRecorder, entity->p, &gameState->worldArena, gameState);
     
     if (shouldCamFollow)
     {
@@ -365,13 +362,21 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
     else
     {
 	//get a recorded input and remove it from the list
+#if 0	
 	if (gameState->stateRecorder)
 	{
 	    projectedLocation = gameState->stateRecorder->playerP;
 	    //Remove node
 	    RemoveFirstRecording(gameState, &gameState->stateRecorder);
+	    
 	}
-	
+#endif
+
+	if (gameState->stateRecorderList)
+	{
+	    projectedLocation = gameState->stateRecorderList->p;
+	    RemoveStateRecording(gameState->stateRecorderMemory, &gameState->stateRecorderList);
+	}
     }
     tile_map_position testTileP = CenteredTilePoint(projectedLocation.absTileX, projectedLocation.absTileY, projectedLocation.absTileZ);
     tile_value tileValue = GetTileValue(tileMap, testTileP);
@@ -390,7 +395,8 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
     //Add new recording to the inputs
     if (newStep && hasMoved)
     {
-	AddRecording(&gameState->stateRecorder, oldPosition, &gameState->worldArena, gameState);
+//	AddRecording(&gameState->stateRecorder, oldPosition, &gameState->worldArena, gameState);
+	AddStateRecording(gameState->stateRecorderMemory, oldPosition, &gameState->stateRecorderList);
     }
 }
 

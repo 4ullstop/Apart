@@ -309,15 +309,16 @@ struct input_timer
 
 struct state_recorder_node
 {
-    tile_map_position playerP;
     state_recorder_node* next;
+
+    //The data of fixed size (using a struct bc ik what I want)
+    tile_map_position p;    
 };
 
 struct state_recorder
 {
-    state_recorder_node* stateRecorderFreedMemory[MEMORY_LIST_SIZE];
-    state_recorder_node* stateRecorder;
-    i32 lastRecordIndex;    
+    state_recorder_node* freeNodes;
+    state_recorder_node* nodeArray;
 };
 
 //Team Fat Struct ftw baby lets gooooooo
@@ -356,8 +357,9 @@ struct game_state
     
 
     memory_arena stateRecorderArena;
-    state_recorder stateRecorder;
+    state_recorder* stateRecorderMemory;
 
+    state_recorder_node* stateRecorderList;
 };
 
 #define APART_H

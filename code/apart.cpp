@@ -367,6 +367,28 @@ EntityFloatingMovement(entity* entity, r32 dTime, game_state* gameState)
     }    
 }
 
+internal void
+InitializeStateRecorder(state_recorder* stateRecorder, game_state* gameState)
+{
+
+    memory_index listSize = gameState->stateRecorderArena.size - sizeof(state_recorder_node);
+
+    u32 recorderCount = 0;
+    for (; gameState->stateRecorderArena.used <= listSize; recorderCount++)
+    {
+	stateRecorder->freeNodes =
+	    stateRecorder->nodeArray =
+	    PushStruct(&gameState->stateRecorderArena, state_recorder_node);
+    }
+
+    for (memory_index i = 0; i < recorderCount - 1; ++i)
+    {
+	stateRecorder->nodeArray[i].next = &stateRecorder->nodeArray[i + 1];
+	stateRecorder->nodeArray[listSize - 1].next = 0;
+    }
+    
+}
+
 extern "C" GAME_GET_SOUND_DATA(GameGetSoundData)
 {
 #if 0
@@ -461,10 +483,13 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 			(u8*)memory->permanentStorage + sizeof(game_state));
 
 	//Initialize a new arena for transient stuff
-	InitializeArena(&gameState->stateRecorderArena, memory->transientStorageSize - sizeof(game_state),
+	InitializeArena(&gameState->stateRecorderArena, Kilobytes(1),
 		       (u8*)memory->transientStorage + sizeof(game_state));
 
-	gameState->stateRecorder = PushStruct(&gameState->stateRecorderArena, state_recorder);
+
+	gameState->stateRecorderMemory = PushStruct(&gameState->stateRecorderArena, state_recorder);
+
+	InitializeStateRecorder(gameState->stateRecorderMemory, gameState);
 	
 	gameState->world = PushStruct(&gameState->worldArena, world);
 	world* world = gameState->world;
@@ -495,9 +520,6 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 	gameState->mouseCursorSaved = DEBUGLoadBMP(thread, memory->DEBUGPlatformReadEntireFile, "BMP/mouse_cursor.bmp");
 	gameState->mouseCursorBitmap = gameState->mouseCursorSaved;
 
-	input_timer inputTimer = {};
-	inputTimer.maxHeldTime = 10.0f;
-	gameState->inputTimer = &inputTimer;
 
 	
 	
@@ -640,7 +662,7 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
     r32 metersToPixels = tileSideInPixels / tileMap->tileSideInMeters;
     tileMap->metersToPixels = metersToPixels;
 
-    gameState->inputTimer->maxHeldTime = 1000.0f * input->dTime;
+
     
     //The first controller is the only controller, I removed the ability for multiplayer
     //bc I don't think I'll be needing it for this game
