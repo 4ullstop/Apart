@@ -112,13 +112,14 @@ InitializeParty(game_state* gameState, u32 entityIndex, v2 startingLoc, bool32 s
     entity->canJump = true;
     entity->bitmap = entityBitmap;
 
-    AddStateRecording(gameState->stateRecorderMemory, entity->p, &gameState->stateRecorderList);
+
     //Push first location onto list
 //    AddRecording(&gameState->stateRecorder, entity->p, &gameState->worldArena, gameState);
     
     if (shouldCamFollow)
     {
 	gameState->cameraFollowingEntityIndex = entityIndex;
+	AddStateRecording(gameState->stateRecorderMemory, entity->p, &gameState->stateRecorderList);	
     }
 }
 
@@ -362,16 +363,6 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
     else
     {
 	//get a recorded input and remove it from the list
-#if 0	
-	if (gameState->stateRecorder)
-	{
-	    projectedLocation = gameState->stateRecorder->playerP;
-	    //Remove node
-	    RemoveFirstRecording(gameState, &gameState->stateRecorder);
-	    
-	}
-#endif
-
 	if (gameState->stateRecorderList)
 	{
 	    projectedLocation = gameState->stateRecorderList->p;
@@ -381,8 +372,6 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
     tile_map_position testTileP = CenteredTilePoint(projectedLocation.absTileX, projectedLocation.absTileY, projectedLocation.absTileZ);
     tile_value tileValue = GetTileValue(tileMap, testTileP);
 
-
-    
 
     if (CanPlayerWalkInTile(tileValue))
     {
@@ -395,7 +384,6 @@ MovePlayer(v2 ddP, entity* entity, game_state* gameState, bool32 newStep)
     //Add new recording to the inputs
     if (newStep && hasMoved)
     {
-//	AddRecording(&gameState->stateRecorder, oldPosition, &gameState->worldArena, gameState);
 	AddStateRecording(gameState->stateRecorderMemory, oldPosition, &gameState->stateRecorderList);
     }
 }

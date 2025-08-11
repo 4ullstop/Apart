@@ -2,12 +2,12 @@
 ;; --------------------------------------------------------------------------
 ;; Desktop File for Emacs
 ;; --------------------------------------------------------------------------
-;; Created Sun Aug 10 15:46:23 2025
+;; Created Mon Aug 11 14:51:53 2025
 ;; Desktop file format version 208
 ;; Emacs version 29.1
 
 ;; Global section:
-(setq desktop-saved-frameset [frameset 1 (26776 63247 823243 0) (desktop . "208") "easte@MSI" nil nil ((((minibuffer . t) (undecorated) (skip-taskbar) (font . "-outline-Courier New-regular-normal-normal-mono-14-*-*-*-c-*-iso8859-1") (border-width . 0) (internal-border-width . 0) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#c6a57b") (background-color . "#151515") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 10) (right-fringe . 10) (no-focus-on-map) (no-accept-focus) (no-special-glyphs) (alpha-background) (alpha) (menu-bar-lines . 0) (tab-bar-lines . 0) (height . 59) (tool-bar-lines . 0) (inhibit-double-buffering) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 17) (scroll-bar-height . 17) (fullscreen . maximized) (z-group) (visibility . t) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#c6a57b") (font-parameter) (environment) (last-focus-update) (frameset--id . "B974-B932-104D-E2D7") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (display . "w32") (explicit-name) (tool-bar-position . top) (width . 237) (left + -1928) (top + -7)) ((min-height . 4) (min-width . 20) (min-height-ignore . 3) (min-width-ignore . 10) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 68) (min-pixel-width . 160) (min-pixel-height-ignore . 51) (min-pixel-width-ignore . 80) (min-pixel-height-safe . 17) (min-pixel-width-safe . 32)) hc (pixel-width . 1920) (pixel-height . 992) (total-width . 240) (total-height . 58) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 956) (pixel-height . 992) (total-width . 119) (total-height . 58) (normal-height . 1.0) (normal-width . 0.49696969696969695) (buffer "*Compiler Shell*" (selected . t) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 11177) (start . 9723)) (prev-buffers ("apart.h" 7329 7747) ("code" 1 211) ("entity.cpp" 1124 1819) ("*Compiler Shell*" 8930 11177) ("apart.cpp" 8465 9853) (".emacs" 2119 2777))) (leaf (last . t) (pixel-width . 964) (pixel-height . 992) (total-width . 121) (total-height . 58) (normal-height . 1.0) (normal-width . 0.503030303030303) (buffer "entity.cpp" (selected) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 10158) (start . 9474)) (next-buffers "*Compiler Shell*") (prev-buffers ("*Compiler Shell*" 9235 11177) ("entity.cpp" 10380 10952) ("apart.cpp" 12017 13075) (".emacs" 2119 2777) ("apart_intrinsics.h" 1 1) ("code" 1 265) ("apart.h" 6740 7356)))))])
+(setq desktop-saved-frameset [frameset 1 (26778 15305 631865 0) (desktop . "208") "easte@MSI" nil nil ((((minibuffer . t) (undecorated) (skip-taskbar) (font . "-outline-Courier New-regular-normal-normal-mono-14-*-*-*-c-*-iso8859-1") (border-width . 0) (internal-border-width . 0) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#c6a57b") (background-color . "#151515") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 10) (right-fringe . 10) (no-focus-on-map) (no-accept-focus) (no-special-glyphs) (alpha-background) (alpha) (menu-bar-lines . 0) (tab-bar-lines . 0) (height . 59) (tool-bar-lines . 0) (inhibit-double-buffering) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 17) (scroll-bar-height . 17) (fullscreen . maximized) (z-group) (visibility . t) (scroll-bar-foreground . "systemscrollbar") (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#c6a57b") (font-parameter) (last-focus-update) (frameset--id . "6017-9329-6FE9-E7CA") (frameset--mini t) (width . 237) (modeline . t) (unsplittable) (left + -8) (top + -8) (icon-name) (display . "w32") (explicit-name) (tool-bar-position . top)) ((min-height . 4) (min-width . 10) (min-height-ignore . 3) (min-width-ignore . 5) (min-height-safe . 1) (min-width-safe . 2) (min-pixel-height . 68) (min-pixel-width . 80) (min-pixel-height-ignore . 51) (min-pixel-width-ignore . 40) (min-pixel-height-safe . 17) (min-pixel-width-safe . 16)) leaf (pixel-width . 1920) (pixel-height . 992) (total-width . 240) (total-height . 58) (normal-height . 1.0) (normal-width . 1.0) (buffer "*scratch*" (selected) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 598) (start . 1)) (prev-buffers ("entity.cpp" 2262 3016) ("*Compiler Shell*" 1 801))) (((minibuffer . t) (undecorated) (skip-taskbar) (font . "-outline-Courier New-regular-normal-normal-mono-14-*-*-*-c-*-iso8859-1") (border-width . 0) (internal-border-width . 0) (child-frame-border-width) (right-divider-width . 0) (bottom-divider-width . 0) (vertical-scroll-bars) (horizontal-scroll-bars) (foreground-color . "#c6a57b") (background-color . "#151515") (mouse-color . "black") (border-color . "black") (screen-gamma) (line-spacing) (left-fringe . 10) (right-fringe . 10) (no-focus-on-map) (no-accept-focus) (no-special-glyphs) (alpha-background) (alpha) (menu-bar-lines . 0) (tab-bar-lines . 0) (height . 59) (tool-bar-lines . 0) (inhibit-double-buffering) (title) (icon-type) (auto-raise) (auto-lower) (cursor-type . box) (scroll-bar-width . 17) (scroll-bar-height . 17) (fullscreen . maximized) (z-group) (visibility . t) (scroll-bar-foreground) (scroll-bar-background) (display-type . color) (background-mode . dark) (cursor-color . "#c6a57b") (font-parameter) (environment) (last-focus-update) (frameset--id . "B974-B932-104D-E2D7") (frameset--mini t . t) (modeline . t) (unsplittable) (icon-name) (display . "w32") (explicit-name) (tool-bar-position . top) (width . 237) (left + -1928) (top + -7)) ((min-height . 4) (min-width . 20) (min-height-ignore . 3) (min-width-ignore . 10) (min-height-safe . 1) (min-width-safe . 4) (min-pixel-height . 68) (min-pixel-width . 160) (min-pixel-height-ignore . 51) (min-pixel-width-ignore . 80) (min-pixel-height-safe . 17) (min-pixel-width-safe . 32)) hc (pixel-width . 1920) (pixel-height . 992) (total-width . 240) (total-height . 58) (normal-height . 1.0) (normal-width . 1.0) (combination-limit) (leaf (pixel-width . 960) (pixel-height . 992) (total-width . 120) (total-height . 58) (normal-height . 1.0) (normal-width . 0.5) (buffer "*Compiler Shell*" (selected . t) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 801) (start . 1)) (prev-buffers ("entity.cpp" 1922 2696) ("apart.cpp" 12017 13075) (".emacs" 2119 2777) ("apart_intrinsics.h" 1 1) ("code" 1 265) ("apart.h" 6740 7356))) (leaf (last . t) (pixel-width . 960) (pixel-height . 992) (total-width . 120) (total-height . 58) (normal-height . 1.0) (normal-width . 0.5) (buffer "entity.cpp" (selected) (hscroll . 0) (fringes 10 10 nil nil) (margins nil) (scroll-bars nil 0 t nil 0 t nil) (vscroll . 0) (dedicated) (point . 2412) (start . 2295)))))])
 (setq desktop-missing-file-warning nil)
 (setq tags-file-name nil)
 (setq tags-table-list nil)
@@ -22,12 +22,24 @@
   "entity.cpp"
   'c++-mode
   '(font-lock-mode)
-  10158
-  '(8868 nil)
+  2696
+  '(3200 nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26776 63213 908409 0) (buffer-file-coding-system . undecided-dos))
-  '((mark-ring (21 9159 760 9159 10694 224 3203 21 21 21 21 21 21 21 21 21))))
+  '((indent-tabs-mode . t) (buffer-display-time 26778 14275 446203 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring (9864 8867 21 9158 760 9158 10485 224 3107 21 21 21 21 21 21 2412))))
+
+(desktop-create-buffer 208
+  "f:/code/apart.cpp"
+  "apart.cpp"
+  'c++-mode
+  '(font-lock-mode)
+  9622
+  '(13011 nil)
+  nil
+  nil
+  '((indent-tabs-mode . t) (buffer-display-time 26777 56699 888441 0) (buffer-file-coding-system . undecided-dos))
+  '((mark-ring (13011 13012 13800 9927 9217 9552 9422 9217 9344 17821 14562 14562 13435 9217 9754 13075))))
 
 (desktop-create-buffer 208
   "f:/code/apart.h"
@@ -38,7 +50,7 @@
   '(1 nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26776 63197 48192 0) (buffer-file-coding-system . undecided-dos))
+  '((indent-tabs-mode . t) (buffer-display-time 26777 56698 333302 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring (5784 7726 6740 6804 6861 1 6861 7748 6861 6936 6678 6936 6861 7748 6936 6861))))
 
 (desktop-create-buffer 208
@@ -50,20 +62,8 @@
   '(nil nil)
   t
   '("f:/code/")
-  '((buffer-display-time 26776 63196 448229 0))
+  '((buffer-display-time 26777 56696 101309 0))
   '((mark-ring nil)))
-
-(desktop-create-buffer 208
-  "f:/code/apart.cpp"
-  "apart.cpp"
-  'c++-mode
-  '(font-lock-mode)
-  9853
-  '(13011 nil)
-  nil
-  nil
-  '((indent-tabs-mode . t) (buffer-display-time 26776 61830 993793 0) (buffer-file-coding-system . undecided-dos))
-  '((mark-ring (13011 13012 13800 9927 9217 9552 9422 9217 9344 17821 14562 14562 13435 9217 9754 13075))))
 
 (desktop-create-buffer 208
   "f:/code/apart_intrinsics.h"
@@ -74,7 +74,7 @@
   '(nil nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26776 61149 314313 0) (buffer-file-coding-system . undecided-dos))
+  '((indent-tabs-mode . t) (buffer-display-time 26777 51182 272524 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -86,19 +86,19 @@
   '(1 nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26776 13922 868903 0) (buffer-file-coding-system . undecided-dos))
+  '((indent-tabs-mode . t) (buffer-display-time 26777 3955 839676 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
   "d:/emacs/emacs-29.0.92/emacs-29.1/share/emacs/29.1/etc/PROBLEMS"
   "PROBLEMS"
   'outline-mode
-  '(goto-address-mode view-mode font-lock-mode)
+  '(font-lock-mode view-mode goto-address-mode)
   1
   '(nil nil)
   t
   nil
-  '((buffer-display-time 26776 8189 214927 0) (buffer-file-coding-system . utf-8-unix))
+  '((buffer-display-time 26776 63758 211377 0) (buffer-file-coding-system . utf-8-unix))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -110,7 +110,7 @@
   '(nil nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26776 6953 85200 0) (buffer-file-coding-system . undecided-dos))
+  '((indent-tabs-mode . t) (buffer-display-time 26776 62522 87092 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -122,7 +122,7 @@
   '(nil nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26776 6663 45940 0) (buffer-file-coding-system . undecided-dos))
+  '((indent-tabs-mode . t) (buffer-display-time 26776 62232 61241 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -134,7 +134,7 @@
   '(nil nil)
   nil
   nil
-  '((indent-tabs-mode . t) (buffer-display-time 26775 3947 824599 0) (buffer-file-coding-system . undecided-dos))
+  '((indent-tabs-mode . t) (buffer-display-time 26775 59516 845610 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -146,7 +146,7 @@
   '(nil nil)
   nil
   nil
-  '((buffer-display-time 26775 3459 229330 0) (buffer-file-coding-system . undecided-dos))
+  '((buffer-display-time 26775 59028 256418 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -158,7 +158,7 @@
   '(nil nil)
   t
   '("f:/misc/")
-  '((buffer-display-time 26775 3464 212130 0))
+  '((buffer-display-time 26775 59033 247893 0))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
@@ -170,18 +170,18 @@
   '(nil nil)
   t
   '("f:/")
-  '((buffer-display-time 26775 3465 193798 0))
+  '((buffer-display-time 26775 59034 230576 0))
   '((mark-ring nil)))
 
 (desktop-create-buffer 208
   "f:/misc/.emacs"
   ".emacs"
   'emacs-lisp-mode
-  '(eldoc-mode font-lock-mode)
+  '(font-lock-mode eldoc-mode)
   2777
   '(2777 nil)
   nil
   nil
-  '((buffer-display-time 26776 61808 643810 0) (buffer-file-coding-system . undecided-dos))
+  '((buffer-display-time 26778 5515 69869 0) (buffer-file-coding-system . undecided-dos))
   '((mark-ring nil)))
 
