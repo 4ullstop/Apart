@@ -73,17 +73,9 @@ RemoveStateRecording(state_recorder* recorderMemory, state_recorder_node** recor
 internal void
 AddStateRecording(state_recorder* recorderMemory, tile_map_position newP, state_recorder_node** recorderList)
 {
-    //Create new list if one doesn't exist
-    //Find a location to put the info
-    //Connect the location to the main list of filled locations
-
-    //The chunk array is the used places
-    //The freed list is the unused places
-    //When you use a new location, remove the item from the freed list and place in chunk array?
-
     state_recorder_node* newNode = (state_recorder_node*)StatePoolAlloc(recorderMemory);
     newNode->p = newP;
-    //Add to recording list to be taken out of
+
     if (recorderList == 0)
     {
 	*recorderList = newNode;
@@ -93,7 +85,6 @@ AddStateRecording(state_recorder* recorderMemory, tile_map_position newP, state_
 	newNode->next = *recorderList;
 	*recorderList = newNode;
     }
-    
 }
 
 internal void
@@ -104,6 +95,7 @@ InitializeParty(game_state* gameState, u32 entityIndex, v2 startingLoc, bool32 s
     entity->floatingMovement = false;
     entity->p.absTileX = (u32)startingLoc.x;
     entity->p.absTileY = (u32)startingLoc.y;
+    entity->startingLocation = startingLoc;    
     entity->p.offset.x = 0.0f;
     entity->p.offset.y = 0.0f;
     entity->originalP = entity->p;

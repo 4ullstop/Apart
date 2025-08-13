@@ -370,7 +370,6 @@ EntityFloatingMovement(entity* entity, r32 dTime, game_state* gameState)
 internal void
 InitializeStateRecorder(state_recorder* stateRecorder, game_state* gameState)
 {
-
     memory_index listSize = gameState->stateRecorderArena.size - sizeof(state_recorder_node);
 
     u32 recorderCount = 0;
@@ -814,8 +813,12 @@ extern "C" GAME_UPDATE_AND_RENDER(GameUpdateAndRender)
 
 	    if (controller->rightShoulder.started)
 	    {
-		//Reset from start input
-		//But what does start mean?
+		controllingEntity->p.absTileX = (u32)controllingEntity->startingLocation.x;
+		controllingEntity->p.absTileY = (u32)controllingEntity->startingLocation.y;		
+		
+		gameState->stateRecorderArena.used = 0;
+		gameState->stateRecorderList = 0;
+		InitializeStateRecorder(gameState->stateRecorderMemory, gameState);
 	    }
 		
 	    if (controller->moveLeft.started)

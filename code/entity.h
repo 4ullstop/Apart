@@ -58,6 +58,8 @@ struct entity
     v2 ddP;
 
     bool32 floatingMovement;
+
+    v2 startingLocation;
 };
 
 inline bool32 IsEntityInAir(entity* entity)
